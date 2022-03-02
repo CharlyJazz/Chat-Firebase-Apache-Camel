@@ -20,9 +20,20 @@ services:
       - ALLOW_PLAINTEXT_LISTENER=yes
     depends_on:
       - zookeeper
-
+  auth_db:
+    image: postgres
+    volumes:
+      - auth_db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: auth_microservice
+      POSTGRES_USER: auth_microservice
+      POSTGRES_PASSWORD: auth_microservice
+    ports:
+      - '5433:5432'
 volumes:
   zookeeper_data:
     driver: local
   kafka_data:
+    driver: local
+  auth_db_data:
     driver: local

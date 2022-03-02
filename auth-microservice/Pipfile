@@ -1,0 +1,33 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+fastapi = "*"
+sqlalchemy = "*"
+asyncpg = "*"
+pyhumps = "*"
+alembic = "*"
+pydantic = "*"
+passlib = "*"
+python-jose = "*"
+python-multipart = "*"
+arq = "*"
+uvloop = "*"
+uvicorn = "*"
+python-dotenv = "*"
+
+[dev-packages]
+pytest = "*"
+pytest-asyncio = "*"
+pytest-cov = "*"
+flake8 = "*"
+isort = "*"
+black = "*"
+mypy = "*"
+httpx = "*"
+asgi-lifespan = "*"
+
+[requires]
+python_version = "3.9"
