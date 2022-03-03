@@ -5,20 +5,25 @@ import pytest
 
 from asgi_lifespan import LifespanManager
 from httpx import AsyncClient
-from sqlalchemy.ext.asyncio import AsyncConnection, AsyncSession
+from sqlalchemy.ext.asyncio import AsyncConnection, AsyncSession, create_async_engine
 
 from app.api.deps import get_session
 from app.core import settings
-from app.core import engine
 from app.main import app
+from app.models.base import Base
 
 
 @pytest.fixture()
 async def connection():
-    async with engine.begin() as conn:
-        yield conn
-        await conn.rollback()
+    engine = create_async_engine(
+        "sqlite+aiosqlite:///:memory:",
+        echo=True,
+    )
 
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.drop_all)
+        await conn.run_sync(Base.metadata.create_all)
+        yield conn
 
 @pytest.fixture()
 async def session(connection: AsyncConnection):

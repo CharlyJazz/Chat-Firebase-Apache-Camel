@@ -17,6 +17,4 @@ async def login(
     user = await authenticate(session, username=data.username, password=data.password)
     if user is None:
         raise HTTPException(status_code=400, detail="Incorrect username or password")
-    if not user.is_active:
-        raise HTTPException(status_code=400, detail="Inactive user")
     return {"access_token": create_access_token(user), "token_type": "bearer"}

@@ -17,6 +17,7 @@ arq = "*"
 uvloop = "*"
 uvicorn = "*"
 python-dotenv = "*"
+bcrypt = "*"
 
 [dev-packages]
 pytest = "*"
@@ -28,6 +29,7 @@ black = "*"
 mypy = "*"
 httpx = "*"
 asgi-lifespan = "*"
+aiosqlite = "*"
 
 [requires]
 python_version = "3.9"
