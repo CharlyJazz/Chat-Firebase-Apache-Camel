@@ -28,3 +28,10 @@ Load env variables
 ### Run tests
 
 `pytest app/tests --disable-warnings`
+
+
+## Access to postgres
+
+Let imagine `ec4942c811fe` is the container ID (`docker ps` will show you what is the id)
+
+`docker exec -ti ec4942c811fe psql -U auth_microservice`
