@@ -27,7 +27,7 @@ Load env variables
 
 ### Run tests
 
-`pytest app/tests --disable-warnings`
+`pytest app/tests --disable-warnings -rP`
 
 
 ## Access to postgres

@@ -18,6 +18,7 @@ uvloop = "*"
 uvicorn = "*"
 python-dotenv = "*"
 bcrypt = "*"
+factory-boy = "*"
 
 [dev-packages]
 pytest = "*"

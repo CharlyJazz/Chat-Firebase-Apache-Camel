@@ -11,13 +11,14 @@ from app.api.deps import get_session
 from app.core import settings
 from app.main import app
 from app.models.base import Base
+from app.tests.factories import UserFactory
 
 
 @pytest.fixture()
 async def connection():
     engine = create_async_engine(
         "sqlite+aiosqlite:///:memory:",
-        echo=True,
+        echo=False,
     )
 
     async with engine.begin() as conn:
@@ -51,7 +52,9 @@ async def client():
 
 
 @pytest.fixture()
-async def superuser_token_headers(client: AsyncClient) -> Dict[str, str]:
+async def user_token_headers(client: AsyncClient, session: AsyncSession) -> Dict[str, str]:
+    session.add(UserFactory())
+    await session.commit()
     login_data = {
         "username": settings.FIRST_USER_USERNAME,
         "password": settings.FIRST_USER_PASSWORD.get_secret_value(),
