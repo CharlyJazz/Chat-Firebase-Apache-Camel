@@ -31,7 +31,7 @@ async def get_current_user(
     token: str = Depends(get_token_data),
     session: AsyncSession = Depends(get_session),
 ):
-    user = await User.get(session, id=token.user_id)
+    user = await session.get(User, token.user_id)
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
     return user
