@@ -1,39 +1,59 @@
-version: '2'
+version: "3"
 
 services:
   zookeeper:
-    image: 'docker.io/bitnami/zookeeper:3-debian-10'
+    image: 'bitnami/zookeeper:latest'
     ports:
       - '2181:2181'
-    volumes:
-      - 'zookeeper_data:/bitnami'
     environment:
       - ALLOW_ANONYMOUS_LOGIN=yes
   kafka:
-    image: 'docker.io/bitnami/kafka:2-debian-10'
+    image: 'bitnami/kafka:latest'
     ports:
       - '9092:9092'
-    volumes:
-      - 'kafka_data:/bitnami'
     environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://127.0.0.1:9092
       - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
       - ALLOW_PLAINTEXT_LISTENER=yes
     depends_on:
       - zookeeper
-  auth_db:
-    image: postgres
-    volumes:
-      - auth_db_data:/var/lib/postgresql/data
-    environment:
-      POSTGRES_DB: auth_microservice
-      POSTGRES_USER: auth_microservice
-      POSTGRES_PASSWORD: auth_microservice
-    ports:
-      - '5433:5432'
-volumes:
-  zookeeper_data:
-    driver: local
-  kafka_data:
-    driver: local
-  auth_db_data:
-    driver: local
+
+  
+#   auth_db:
+#     image: postgres
+#     volumes:
+#       - auth_db_data:/var/lib/postgresql/data
+#     environment:
+#       POSTGRES_DB: auth_microservice
+#       POSTGRES_USER: auth_microservice
+#       POSTGRES_PASSWORD: auth_microservice
+#     ports:
+#       - '5433:5432'
+# volumes:
+#   zookeeper_data:
+#     driver: local
+#   kafka_data:
+#     driver: local
+#   auth_db_data:
+#     driver: local
+
+# https://hub.docker.com/r/bitnami/kafka/
+# https://github.com/wurstmeister/kafka-docker/issues/389#issuecomment-416884988
+
+# docker-compose rm -svf && docker-compose up
+
+
+# https://citizix.com/how-to-run-cassandra-4-with-docker-and-docker-compose/
+
+
+# docker run -d \
+#     --name my-cassandra \
+#     -p 9042:9042 \
+#     -v ~/apps/cassandra:/var/lib/cassandra \
+#     -e CASSANDRA_CLUSTER_NAME=citizix \
+#     cassandra:4.0
+
+
+# docker exec -it book-cassandra cqlsh

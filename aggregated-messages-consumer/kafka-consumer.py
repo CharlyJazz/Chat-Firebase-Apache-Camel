@@ -1,5 +1,7 @@
 from kafka import KafkaConsumer
 
-consumer = KafkaConsumer('chat')
+TOPIC_NAME = 'chat_messages'
+consumer = KafkaConsumer(TOPIC_NAME)
+
 for msg in consumer:
   print(msg)

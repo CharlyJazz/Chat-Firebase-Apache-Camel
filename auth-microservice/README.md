@@ -30,7 +30,7 @@ Load env variables
 `pytest app/tests --disable-warnings -rP`
 
 
-## Access to postgres
+## Access to postgres in development
 
 Let imagine `ec4942c811fe` is the container ID (`docker ps` will show you what is the id)
 
