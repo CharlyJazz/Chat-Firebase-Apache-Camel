@@ -21,6 +21,7 @@ bcrypt = "*"
 factory-boy = "*"
 kafka-python = "*"
 aiokafka = "*"
+cassandra-driver = "*"
 
 [dev-packages]
 pytest = "*"
