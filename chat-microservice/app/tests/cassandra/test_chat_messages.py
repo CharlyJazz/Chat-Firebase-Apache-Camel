@@ -60,6 +60,7 @@ def test_paginate_messages(cassandra_session, cassandra_db, cassandra_db_session
         from_user=from_user_id, to_user=to_user_id
     ).limit(10)
 
+    assert len(results) == 10
     assert results[0]["body"] == 'Message Number 100'
 
     last_time = results[9]["time"]
@@ -68,6 +69,7 @@ def test_paginate_messages(cassandra_session, cassandra_db, cassandra_db_session
         from_user=from_user_id, to_user=to_user_id
     ).filter(time__lt=last_time).limit(10)
 
+    assert len(results) == 10
     assert results[0]["body"] == 'Message Number 90'
 
     last_time = results[9]["time"]
@@ -76,6 +78,7 @@ def test_paginate_messages(cassandra_session, cassandra_db, cassandra_db_session
         from_user=from_user_id, to_user=to_user_id
     ).filter(time__lt=last_time).limit(10)
 
+    assert len(results) == 10
     assert results[0]["body"] == 'Message Number 80'
 
     # SHEEESH
