@@ -10,7 +10,7 @@ class ChatMessages(models.Model):
     from_user = columns.Text(primary_key=True, partition_key=True)
     to_user = columns.Text(primary_key=True, partition_key=True)
     body = columns.Text()
-    time = columns.TimeUUID(primary_key=True, default=uuid1, clustering_order='ASC')
+    time = columns.TimeUUID(primary_key=True, default=uuid1, clustering_order='DESC')
 
     def __repr__(self):
         return '%s %s %s %s' % (

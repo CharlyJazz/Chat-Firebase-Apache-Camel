@@ -37,6 +37,11 @@ def cassandra_session():
     management.sync_table(ChatMessages)
 
 @pytest.fixture()
+def cassandra_db_session():
+    global db_session
+    return db_session
+
+@pytest.fixture()
 def cassandra_db():
     global db_session
 
