@@ -1,32 +1,45 @@
-from fastapi import APIRouter, Depends, HTTPException
-from fastapi.security import OAuth2PasswordRequestForm
-from sqlalchemy.ext.asyncio import AsyncSession
-from kafka import KafkaProducer
+import json
 
-from app.schemas.message import MessageSentREST
+from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.responses import JSONResponse
+from cassandra import WriteFailure
+
+from app.schemas.message import MessageSentREST, MessageCreatedResponse
+from app.core.config import settings
 from ..deps import (
-    get_kafka_producer
+    get_kafka_producer,
+    get_chat_message_model
 )
 
-import json
 
 router = APIRouter(tags=["Messaging"])
 
-@router.post("/messaging/")
+@router.post(
+    "/messaging/", 
+    response_model=MessageCreatedResponse, 
+    status_code=status.HTTP_201_CREATED
+)
 async def create_message(
     message: MessageSentREST, 
-    kafka_producer = Depends(get_kafka_producer)
+    kafka_producer = Depends(get_kafka_producer),
+    chat_message_model = Depends(get_chat_message_model),
 ):
     """
     The user send a message using this endpoint
     Save the message in cassandra in async way
     Send the message to the kafka topic to use in apache camel
-    
+    Message ID and the timestamp automatically created
+
     - **body**: Message text
-    - **created_at**: Time when the message was wrote
     - **from_user**: ID of the user that wrote it
     - **to_user**: ID of the user that need the message back
     """
-    # TODO: Save message in cassandra async
     await kafka_producer.send_and_wait("chat_messages", message.json().encode('utf-8'))
-    return {"succes": "always"}
+    try:
+        record_created = get_chat_message_model().create(**message.__dict__)
+        return MessageCreatedResponse(**dict(record_created))
+    except BaseException:
+        raise HTTPException(
+            status_code=400, detail=settings.CASSANDRA_MESSAGE_CREATION_ERROR
+        )
+

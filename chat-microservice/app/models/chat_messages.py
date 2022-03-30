@@ -13,10 +13,4 @@ class ChatMessages(models.Model):
     time = columns.TimeUUID(primary_key=True, default=uuid1, clustering_order='DESC')
 
     def __repr__(self):
-        return '%s %s %s %s' % (
-            self.message_id, 
-            self.from_user, 
-            self.to_user,
-            self.body,
-            self.time
-        )
+        return f'{self.message_id} {self.from_user} {self.to_user} {self.body} {self.time}'

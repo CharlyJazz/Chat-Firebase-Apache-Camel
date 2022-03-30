@@ -1,9 +1,11 @@
 import asyncio
 
 from aiokafka import AIOKafkaProducer
+from app.core.config import settings
 
 loop = asyncio.get_event_loop()
-# TODO: Use it the KAFKA env variables from config file
+
 kafka_producer = AIOKafkaProducer(
-    loop=loop, bootstrap_servers='localhost:9092'
+    loop=loop, 
+    bootstrap_servers=settings.KAFKA_BOOTSTRAP_SERVER
 )
