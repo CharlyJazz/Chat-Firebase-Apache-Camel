@@ -17,7 +17,13 @@
 
 ### Run tests
 
-`pytest app/tests --disable-warnings -rP`
+Cassandra Tests
+
+`pytest app/tests/cassandra --disable-warnings -rP`
+
+Server Tests
+
+`export TESTING_MODE=1 && pytest app/tests/api --disable-warnings -rP`
 
 
 ## Access to cassandra in development
