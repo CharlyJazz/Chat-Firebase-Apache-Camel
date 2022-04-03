@@ -1,0 +1,5 @@
+.pytest_cache
+auth_validator.egg-info
+build
+dist
+auth_validator_charlyjazz.egg-info

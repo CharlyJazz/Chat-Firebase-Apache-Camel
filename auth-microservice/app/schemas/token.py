@@ -7,6 +7,6 @@ class Token(BaseModel):
     access_token: str
     token_type: Literal["bearer"]
 
-
+# DELETE THIS AFTER IMPLEMENT AUTH VALIDATOR LIBRARY
 class TokenPayload(BaseModel):
     user_id: Optional[int]
