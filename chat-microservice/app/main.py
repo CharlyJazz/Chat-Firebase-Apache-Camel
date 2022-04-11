@@ -7,12 +7,14 @@ from app.core.kafka import kafka_producer
 from app.core.cassandra import cassandra_connect, cassandra_shutdown
 
 async def startup_event():
-    await kafka_producer.start()
+    if not settings.TESTING_MODE:
+        await kafka_producer.start()
     cassandra_connect()
 
 
 async def shutdown_event():
-    await kafka_producer.stop()
+    if not settings.TESTING_MODE:
+        await kafka_producer.stop()
     cassandra_shutdown()
 
 

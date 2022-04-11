@@ -1,9 +1,8 @@
 import uuid
 
 from app.models.chat_messages import ChatMessages
-from cassandra.query import SimpleStatement
 
-def test_create_a_single_record(cassandra_session, cassandra_db):
+def test_create_a_single_record(cassandra_session):
     model_instance = ChatMessages.create(
         from_user=str(uuid.uuid4()),
         to_user=str(uuid.uuid4()),
@@ -11,7 +10,7 @@ def test_create_a_single_record(cassandra_session, cassandra_db):
     )
     assert ChatMessages.objects().count() == 1
 
-def test_get_all_messages_between_two_users(cassandra_session, cassandra_db):
+def test_get_all_messages_between_two_users(cassandra_session):
     from_user_id = str(uuid.uuid4())
     to_user_id = str(uuid.uuid4())
     quantity = 9
@@ -32,7 +31,7 @@ def test_get_all_messages_between_two_users(cassandra_session, cassandra_db):
     assert len(all_messages_asc_order) == quantity
 
 
-def test_paginate_messages(cassandra_session, cassandra_db, cassandra_db_session):
+def test_paginate_messages(cassandra_session):
     from_user_id = str(uuid.uuid4())
     to_user_id = str(uuid.uuid4())
     quantity = 100

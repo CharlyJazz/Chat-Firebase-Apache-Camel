@@ -2,6 +2,7 @@ from cassandra import AlreadyExists
 from cassandra.cluster import Cluster
 from cassandra.policies import RoundRobinPolicy
 from cassandra.cqlengine import connection, management
+from cassandra.query import dict_factory
 
 from app.models.chat_messages import ChatMessages
 from app.core.config import settings
@@ -17,6 +18,10 @@ def cassandra_connect():
     )
 
     db_session = cluster.connect()
+    # Configures the default connection with a preexisting cassandra.cluster.Session
+    # Note: the mapper presently requires a Session row_factory set to dict_factory.
+    # This may be relaxed in the future
+    db_session.row_factory = dict_factory
 
     try:
         db_session.execute(

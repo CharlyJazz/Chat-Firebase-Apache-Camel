@@ -1,31 +1,19 @@
 from fastapi import Depends, HTTPException
-from fastapi.security import OAuth2PasswordBearer
-from jose import jwt
-from pydantic import ValidationError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
 from app.core.database import SessionLocal
 from app.models.users import User
-from app.schemas.token import TokenPayload
 
-oauth2 = OAuth2PasswordBearer(tokenUrl="/api/v1/login")
+from auth_validator import AuthValidator
 
+validator = AuthValidator(settings.SECRET_KEY.get_secret_value(), settings.ALGORITHM)
+
+get_token_data = validator.get_token_data
 
 async def get_session():
     async with SessionLocal() as session:
         yield session
-
-
-def get_token_data(token: str = Depends(oauth2)) -> TokenPayload:
-    try:
-        secret_key = settings.SECRET_KEY.get_secret_value()
-        payload = jwt.decode(token, secret_key, algorithms=[settings.ALGORITHM])
-        token_data = TokenPayload(**payload)
-    except (jwt.JWTError, ValidationError):
-        raise HTTPException(status_code=403, detail="Could not validate credentials")
-    return token_data
-
 
 async def get_current_user(
     token: str = Depends(get_token_data),
@@ -33,5 +21,5 @@ async def get_current_user(
 ):
     user = await session.get(User, token.user_id)
     if user is None:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise HTTPException(status_code=404, detail=settings.GET_CURRENT_USER_404)
     return user

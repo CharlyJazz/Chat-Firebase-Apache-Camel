@@ -1,7 +1,7 @@
 import asyncio
-from typing import Dict
-
 import pytest
+
+from typing import Dict
 
 from asgi_lifespan import LifespanManager
 from httpx import AsyncClient

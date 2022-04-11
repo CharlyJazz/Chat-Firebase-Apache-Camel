@@ -1,9 +1,11 @@
-from typing import Any, Dict, Optional
+import os
 
+from typing import Any, Dict, Optional
 from pydantic import BaseSettings, SecretStr, validator
 
 
 class Settings(BaseSettings):
+    TESTING_MODE: bool = os.getenv("TESTING_MODE", 0)
     PROJECT_NAME: str
     SECRET_KEY: SecretStr
     ACCESS_TOKEN_EXPIRE_MINUTES: int
@@ -12,10 +14,15 @@ class Settings(BaseSettings):
     CASSANDRA_PROTOCOL_VERSION: int
     CASSANDRA_CLUSTER_ADDRESS: str
     CASSANDRA_MESSAGE_CREATION_ERROR: Optional[str] = None
+    CASSANDRA_MESSAGE_CREATION_UNAUTHORIZED: Optional[str] = None
     KAFKA_BOOTSTRAP_SERVER: str
 
+    class Config:
+        # Relative to main.py
+        env_file = "../.env"
+
     @validator("CASSANDRA_MESSAGE_CREATION_ERROR", pre=True)
-    def validate_cassandra_message_creationg(cls, v: Optional[str], values: Dict[str, Any]) -> str:
+    def validate_cassandra_message_creation_error(cls, v: Optional[str], values: Dict[str, Any]) -> str:
         if isinstance(v, str):
             return v
 
@@ -24,9 +31,15 @@ Error creating the message in cassandra cluster \
 {values.get('CASSANDRA_CLUSTER_ADDRESS')} \
 at keyspace {values.get('CASSANDRA_KEYSPACE')}"
 
-    class Config:
-        # Relative to main.py
-        env_file = "../.env"
+    @validator("CASSANDRA_MESSAGE_CREATION_UNAUTHORIZED", pre=True)
+    def validate_cassandra_message_creation_unauthorized(cls, v: Optional[str], values: Dict[str, Any]) -> str:
+        if isinstance(v, str):
+            return v
+
+        return f"\
+Unauthorized action in cassandra cluster \
+{values.get('CASSANDRA_CLUSTER_ADDRESS')} \
+at keyspace {values.get('CASSANDRA_KEYSPACE')}"
 
 
 settings = Settings()

@@ -22,6 +22,7 @@ factory-boy = "*"
 kafka-python = "*"
 aiokafka = "*"
 cassandra-driver = "*"
+auth-validator = {editable = true, path = "/Users/charlyjazz/Charlyjazz/Chat-Firebase-Apache-Camel/auth-validator"}
 
 [dev-packages]
 pytest = "*"
