@@ -1,13 +1,12 @@
 import pytest
 
 from sqlalchemy.ext.asyncio import AsyncSession, AsyncConnection
-from typing import Dict
 
 from app.tests.factories import UserFactory
 from app.core.config import settings
 
 @pytest.mark.asyncio()
-async def test_get_users_200(client: AsyncSession, session: AsyncConnection, user_token_headers: Dict[str, str]):
+async def test_get_users_200(client: AsyncSession, session: AsyncConnection, user_token_headers: dict[str, str]):
     session.add(UserFactory(username="charly", hashed_password="124567"))
     session.add(UserFactory(username="jazz", hashed_password="124567"))
     await session.commit()
@@ -42,7 +41,7 @@ async def test_get_users_403(client: AsyncSession, session: AsyncConnection):
     assert data["detail"] == settings.GET_TOKEN_DATA_403
 
 @pytest.mark.asyncio()
-async def test_get_user_by_id_200(client: AsyncSession, session: AsyncConnection, user_token_headers: Dict[str, str]):
+async def test_get_user_by_id_200(client: AsyncSession, session: AsyncConnection, user_token_headers: dict[str, str]):
     user = UserFactory(username="charly", hashed_password="124567")
     session.add(user)
     await session.commit()
@@ -76,7 +75,7 @@ async def test_get_user_by_id_403(client: AsyncSession, session: AsyncConnection
 
 
 @pytest.mark.asyncio()
-async def test_get_user_by_id_404(client: AsyncSession, session: AsyncConnection, user_token_headers: Dict[str, str]):
+async def test_get_user_by_id_404(client: AsyncSession, session: AsyncConnection, user_token_headers: dict[str, str]):
     res = await client.get(f"/api/v1/users/2", headers=user_token_headers)
     data = res.json()
     assert res.status_code == 404

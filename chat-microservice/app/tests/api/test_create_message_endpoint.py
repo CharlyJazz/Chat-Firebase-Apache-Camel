@@ -1,7 +1,6 @@
 import pytest
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from typing import Dict
 
 from app.models.chat_messages import ChatMessages
 
@@ -9,7 +8,7 @@ from app.models.chat_messages import ChatMessages
 @pytest.mark.asyncio()
 async def test_create_chat_message_201(
   client: AsyncSession, 
-  user_token_header: Dict[str, str], 
+  user_token_header: dict[str, str], 
   current_user_id: str,
   cassandra_session
 ):
@@ -30,7 +29,7 @@ async def test_create_chat_message_201(
 @pytest.mark.asyncio()
 async def test_create_chat_message_401(
   client: AsyncSession, 
-  unauthorized_user_token_header: Dict[str, str], 
+  unauthorized_user_token_header: dict[str, str], 
   current_user_id: str,
   cassandra_session
 ):
@@ -51,7 +50,7 @@ async def test_create_chat_message_401(
 @pytest.mark.asyncio()
 async def test_create_chat_message_422(
   client: AsyncSession, 
-  user_token_header: Dict[str, str], 
+  user_token_header: dict[str, str], 
   current_user_id: str,
   cassandra_session
 ):

@@ -1,8 +1,6 @@
 import asyncio
 import pytest
 
-from typing import Dict
-
 from asgi_lifespan import LifespanManager
 from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncConnection, AsyncSession, create_async_engine
@@ -52,7 +50,7 @@ async def client():
 
 
 @pytest.fixture()
-async def user_token_headers(client: AsyncClient, session: AsyncSession) -> Dict[str, str]:
+async def user_token_headers(client: AsyncClient, session: AsyncSession) -> dict[str, str]:
     session.add(UserFactory())
     await session.commit()
     login_data = {

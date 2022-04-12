@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import Any
 
 import humps
 from sqlalchemy import inspect
@@ -13,5 +13,5 @@ class Base:
     def __tablename__(cls) -> str:
         return humps.depascalize(cls.__name__)
 
-    def dict(self) -> Dict[str, Any]:
+    def dict(self) -> dict[str, Any]:
         return {c.key: getattr(self, c.key) for c in inspect(self).mapper.column_attrs}

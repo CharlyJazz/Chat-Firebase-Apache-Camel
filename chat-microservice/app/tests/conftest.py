@@ -1,7 +1,6 @@
 import pytest
 
 from jose import jwt
-from typing import Dict
 
 from asgi_lifespan import LifespanManager
 from httpx import AsyncClient
@@ -70,7 +69,7 @@ def current_user_id():
     return "1"
 
 @pytest.fixture()
-def user_token_header(current_user_id: str) -> Dict[str, str]:
+def user_token_header(current_user_id: str) -> dict[str, str]:
     access_token = jwt.encode(
         {
             "exp": datetime.utcnow() + timedelta(minutes=30), 
@@ -82,7 +81,7 @@ def user_token_header(current_user_id: str) -> Dict[str, str]:
     return {"Authorization": f"Bearer {access_token}"}
 
 @pytest.fixture()
-def unauthorized_user_token_header(current_user_id: str) -> Dict[str, str]:
+def unauthorized_user_token_header(current_user_id: str) -> dict[str, str]:
     access_token = jwt.encode(
         {
             "exp": datetime.utcnow() + timedelta(minutes=30), 

@@ -1,6 +1,6 @@
 import os
 
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 from pydantic import BaseSettings, SecretStr, validator
 
 
@@ -22,7 +22,7 @@ class Settings(BaseSettings):
         env_file = "../.env"
 
     @validator("CASSANDRA_MESSAGE_CREATION_ERROR", pre=True)
-    def validate_cassandra_message_creation_error(cls, v: Optional[str], values: Dict[str, Any]) -> str:
+    def validate_cassandra_message_creation_error(cls, v: Optional[str], values: dict[str, Any]) -> str:
         if isinstance(v, str):
             return v
 
@@ -32,7 +32,7 @@ Error creating the message in cassandra cluster \
 at keyspace {values.get('CASSANDRA_KEYSPACE')}"
 
     @validator("CASSANDRA_MESSAGE_CREATION_UNAUTHORIZED", pre=True)
-    def validate_cassandra_message_creation_unauthorized(cls, v: Optional[str], values: Dict[str, Any]) -> str:
+    def validate_cassandra_message_creation_unauthorized(cls, v: Optional[str], values: dict[str, Any]) -> str:
         if isinstance(v, str):
             return v
 

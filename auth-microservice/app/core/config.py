@@ -1,4 +1,4 @@
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 from pydantic import BaseSettings, SecretStr, validator
 
@@ -22,7 +22,7 @@ class Settings(BaseSettings):
     OAUTH2_NOT_AUTHENTICATED: str = 'Not authenticated'
 
     @validator("POSTGRES_URI", pre=True)
-    def validate_postgres_conn(cls, v: Optional[str], values: Dict[str, Any]) -> str:
+    def validate_postgres_conn(cls, v: Optional[str], values: dict[str, Any]) -> str:
         if isinstance(v, str):
             return v
         password: SecretStr = values.get("POSTGRES_PASSWORD", SecretStr(""))

@@ -7,7 +7,7 @@
 
 ### Re run containers
 
-`docker-compose up --force-recreate`
+`docker-compose rm -svf && docker-compose up`
 
 
 ### Run server
