@@ -22,7 +22,7 @@ factory-boy = "*"
 kafka-python = "*"
 aiokafka = "*"
 cassandra-driver = "*"
-auth-validator = {editable = true, path = "/Users/charlyjazz/Charlyjazz/Chat-Firebase-Apache-Camel/auth-validator"}
+auth-validator = {subdirectory = "auth-validator", editable = true, git = "https://github.com/CharlyJazz/Chat-Firebase-Apache-Camel.git/"}
 
 [dev-packages]
 pytest = "*"
