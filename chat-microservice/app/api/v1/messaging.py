@@ -6,9 +6,10 @@ from cassandra import WriteFailure
 
 from app.schemas.message import MessageSentREST, MessageCreatedResponse
 from app.core.config import settings
+from app.models.chat_messages import ChatMessages
+from app.models.chat import Chat
 from ..deps import (
     get_kafka_producer,
-    get_chat_message_model,
     get_token_data,
     get_current_user_id
 )
@@ -25,7 +26,6 @@ router = APIRouter(tags=["Messaging"])
 async def create_message(
     message: MessageSentREST, 
     kafka_producer = Depends(get_kafka_producer),
-    chat_message_model = Depends(get_chat_message_model),
     current_user_id = Depends(get_current_user_id)
 ):
     """
@@ -39,15 +39,23 @@ async def create_message(
     - **to_user**: ID of the user that need the message back
     """
     if str(current_user_id) != str(message.from_user):
+        # TODO: Validate if there are a Chat with the chat_id and the current_user_id is inside users_id
         raise HTTPException(
             status_code=401, detail=settings.CASSANDRA_MESSAGE_CREATION_UNAUTHORIZED
         )
     await kafka_producer.send_and_wait("chat_messages", message.json().encode('utf-8'))
     try:
-        record_created = get_chat_message_model().create(**message.__dict__)
+        record_created = ChatMessages.create(**message.__dict__)
         return MessageCreatedResponse(**dict(record_created))
     except BaseException:
         raise HTTPException(
             status_code=400, detail=settings.CASSANDRA_MESSAGE_CREATION_ERROR
         )
 
+
+@router.get(
+    "/messaging/", 
+    status_code=status.HTTP_200_OK,
+)
+async def get_messages():
+    pass

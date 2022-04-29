@@ -16,6 +16,7 @@ class Settings(BaseSettings):
     CASSANDRA_MESSAGE_CREATION_ERROR: Optional[str] = None
     CASSANDRA_MESSAGE_CREATION_UNAUTHORIZED: Optional[str] = None
     KAFKA_BOOTSTRAP_SERVER: str
+    CASSANDRA_KEYSPACE_TESTING: str = 'python_test_environment'
 
     class Config:
         # Relative to main.py

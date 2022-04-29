@@ -4,7 +4,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.chat_messages import ChatMessages
 
-
 @pytest.mark.asyncio()
 async def test_create_chat_message_201(
   client: AsyncSession, 
@@ -15,7 +14,8 @@ async def test_create_chat_message_201(
     new_message = {
       "from_user": current_user_id,
       "to_user": '1',
-      "body": f'Message Body'
+      "body": f'Message Body',
+      "chat_id": "123"
     }
     res = await client.post(
       f"/api/v1/messaging/",
@@ -36,7 +36,8 @@ async def test_create_chat_message_401(
     new_message = {
       "from_user": current_user_id,
       "to_user": '1',
-      "body": f'Message Body'
+      "body": f'Message Body',
+      "chat_id": "123"
     }
     res = await client.post(
       f"/api/v1/messaging/",

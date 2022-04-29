@@ -13,6 +13,7 @@ from cassandra.query import dict_factory
 
 from app.api.deps import get_kafka_producer
 from app.models.chat_messages import ChatMessages
+from app.models.chat import Chat
 from app.core import settings
 from app.main import app
 from app.tests.mocks.kafka_producer_mock import KafkaProducerMock
@@ -20,8 +21,7 @@ from app.tests.mocks.kafka_producer_mock import KafkaProducerMock
 from datetime import datetime, timedelta
 
 
-keyspace = 'python_test_environment'
-table_name = 'chat_messages'
+keyspace = settings.CASSANDRA_KEYSPACE_TESTING
 
 @pytest.fixture()
 def cassandra_session():
@@ -41,17 +41,22 @@ def cassandra_session():
             'AND durable_writes = true;' % keyspace)
     except AlreadyExists:
         pass
+        
     
     db_session.row_factory = dict_factory
     db_session.set_keyspace(keyspace)
     connection.set_session(db_session)
+
     management.sync_table(ChatMessages)
+    management.sync_table(Chat)
+    
+    db_session.execute(f'TRUNCATE {keyspace}.{Chat.__table_name__}')
+    db_session.execute(f'TRUNCATE {keyspace}.{ChatMessages.__table_name__}')
 
     yield
 
-    db_session.execute(
-        f'TRUNCATE {keyspace}.{table_name}'
-    )
+    db_session.execute(f'TRUNCATE {keyspace}.{Chat.__table_name__}')
+    db_session.execute(f'TRUNCATE {keyspace}.{ChatMessages.__table_name__}')
 
     db_session.shutdown()
 
