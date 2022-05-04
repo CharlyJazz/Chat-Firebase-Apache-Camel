@@ -6,7 +6,7 @@ Chat Message Architecture Solution that **do not** save each message inside Fire
 
 We need a Chat App between two users but dont want save all the message in Firestore. Also we do not want read firestore to retrieve the messages and pagiante it.
 
-The Features are:
+## The Features are:
 
 1. Create User
 2. Login
@@ -15,7 +15,7 @@ The Features are:
 5. Create a new chat room between to users: The user A will find the user B and start a chat.
 6. User get realtime message updating
 
-## Feature Mapping to Architectural Components
+## Mapping Features to Architectural Components
 
 - M1. The users management and authentication (features 1, 2 and 3) will be handle by a microservice called "Auth Microservice"
   - The microservice will have a store.
