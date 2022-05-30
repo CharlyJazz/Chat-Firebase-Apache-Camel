@@ -1,4 +1,5 @@
 import pytest
+import uuid
 
 from jose import jwt
 
@@ -22,6 +23,9 @@ from datetime import datetime, timedelta
 
 
 keyspace = settings.CASSANDRA_KEYSPACE_TESTING
+
+MAIN_FROM_USER_ID = "1"
+MAIN_TO_USER_ID = "2"
 
 @pytest.fixture()
 def cassandra_session():
@@ -70,27 +74,32 @@ async def client():
         yield ac
 
 @pytest.fixture()
-def current_user_id():
-    return "1"
+def main_from_user_uid():
+    return MAIN_FROM_USER_ID
 
 @pytest.fixture()
-def user_token_header(current_user_id: str) -> dict[str, str]:
+def main_to_user_uid():
+    return MAIN_TO_USER_ID
+
+@pytest.fixture()
+def user_token_header(main_from_user_uid: str) -> dict[str, str]:
     access_token = jwt.encode(
         {
             "exp": datetime.utcnow() + timedelta(minutes=30), 
-            "user_id": current_user_id
+            "user_id": main_from_user_uid
         },
         key=settings.SECRET_KEY.get_secret_value(),
         algorithm=settings.ALGORITHM
     )
+
     return {"Authorization": f"Bearer {access_token}"}
 
 @pytest.fixture()
-def unauthorized_user_token_header(current_user_id: str) -> dict[str, str]:
+def unauthorized_user_token_header() -> dict[str, str]:
     access_token = jwt.encode(
         {
             "exp": datetime.utcnow() + timedelta(minutes=30), 
-            "user_id": "2"
+            "user_id": "3"
         },
         key=settings.SECRET_KEY.get_secret_value(),
         algorithm=settings.ALGORITHM

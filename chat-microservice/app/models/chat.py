@@ -11,6 +11,7 @@ class Chat(models.Model):
     All users name inside users_id.
     Queries that this model meet:
     Q1 - Find all chats where a user is
+    Q2 - Check if two users belongs to the same chat
     """
     __table_name__ = 'chat'
     chat_id = columns.UUID(primary_key=True, partition_key=True, default=uuid4)
@@ -19,3 +20,20 @@ class Chat(models.Model):
 
     def __repr__(self):
         return f'{self.chat_id} {self.users_id} {self.users_name}'
+
+    """
+    Query to find if there are chats with the from_user_id on it
+    And then loop the chats to find the to_user_id
+    Return a boolean value
+    """
+    @staticmethod
+    def users_id_belongs_to_chat(chat_id: str, from_user_id: str, to_user_id: str) -> bool:
+        chats = Chat.objects().filter(
+            chat_id=chat_id,
+            users_id__contains=f"{from_user_id}"
+        ).allow_filtering().all()
+        for chat in chats:
+            if to_user_id in list(chat.users_id):
+                return True
+        return False
+

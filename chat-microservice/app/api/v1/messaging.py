@@ -30,16 +30,20 @@ async def create_message(
 ):
     """
     The user send a message using this endpoint
-    Save the message in cassandra in async way
-    Send the message to the kafka topic to use in apache camel
+    Save the message in cassandra in async way (TODO async)
+    Send the message to the kafka topic to use it in apache camel in async way (TODO async)
     Message ID and the timestamp automatically created
 
+    - **chat_id**: ID of the chat
     - **body**: Message text
     - **from_user**: ID of the user that wrote it
     - **to_user**: ID of the user that need the message back
     """
     if str(current_user_id) != str(message.from_user):
-        # TODO: Validate if there are a Chat with the chat_id and the current_user_id is inside users_id
+        raise HTTPException(
+            status_code=401, detail=settings.CASSANDRA_MESSAGE_CREATION_UNAUTHORIZED
+        )
+    if not Chat.users_id_belongs_to_chat(message.chat_id, message.from_user, message.to_user):
         raise HTTPException(
             status_code=401, detail=settings.CASSANDRA_MESSAGE_CREATION_UNAUTHORIZED
         )
