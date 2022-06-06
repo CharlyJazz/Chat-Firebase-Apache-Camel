@@ -2,7 +2,6 @@ import json
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import JSONResponse
-from cassandra import WriteFailure
 
 from app.schemas.message import MessageSentREST, MessageCreatedResponse
 from app.core.config import settings
