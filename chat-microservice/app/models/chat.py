@@ -28,10 +28,12 @@ class Chat(models.Model):
     """
     @staticmethod
     def users_id_belongs_to_chat(chat_id: str, from_user_id: str, to_user_id: str) -> bool:
-        chats = Chat.objects().filter(
-            chat_id=chat_id,
-            users_id__contains=f"{from_user_id}"
-        ).allow_filtering().all()
+        kwargs = {
+            "users_id__contains": f"{from_user_id}"
+        }
+        if chat_id is not None:
+            kwargs["chat_id"] = chat_id
+        chats = Chat.objects().filter(**kwargs).allow_filtering().all()
         for chat in chats:
             if to_user_id in list(chat.users_id):
                 return True

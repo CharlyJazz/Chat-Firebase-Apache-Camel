@@ -31,7 +31,6 @@ async def test_create_chat_message_201(
       headers=user_token_header
     )
     data = res.json()
-    print(res)
     assert res.status_code == 201
     assert ChatMessages.objects().count() == 1
 

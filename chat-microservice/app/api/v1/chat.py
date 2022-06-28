@@ -1,4 +1,5 @@
 import json
+import uuid
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import JSONResponse
@@ -25,31 +26,25 @@ async def create_chat(
     current_user_id = Depends(get_current_user_id)
 ):
     """
-    Create a chat between users using this endpoint
-
+    Create a chat between users using this endpoint.
+    Validate if current user id in user_id
+    This endpoint is not validating if the users id already exists.
+    This endpoint does not have way to get the users name.
     - **users_id**: List of users ID
     """
-
-    # TODO
-    # Query user 1
-    # Return error if user does not exist
-    # user_1_id = 
-    # user_1_name = 
-
-    # TODO
-    # Query user 2
-    # Return error if user does not exist
-    # user_2_id =
-    # user_2_name =
-
-    # TODO: Validate there is not already a chat with the two users
-    
-    # TODO: Try Catch and raise error
-
+    if str(current_user_id) not in chat.users_id:
+        raise HTTPException(
+            status_code=401, detail='User is not authorized to do this action'
+        )
+    user_1_id, user_2_id = chat.users_id
+    if Chat.users_id_belongs_to_chat(None, user_1_id, user_2_id):
+        raise HTTPException(
+            status_code=422, detail='There is a chat for this users'
+        )
+    user_1_name, user_2_name = ['Pepe', 'Fefo'] # HOW
     new_chat = Chat.create(
         chat_id = str(uuid.uuid4()),
         users_id = [user_1_id, user_2_id],
         users_name = [user_1_name, user_2_name]
     )
-
-    #  TODO: Return JSON
+    return new_chat
