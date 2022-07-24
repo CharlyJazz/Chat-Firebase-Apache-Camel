@@ -54,9 +54,9 @@ def test_users_belongs_to_chat_method(cassandra_session):
         first_chat.chat_id, 
         from_user_id, 
         to_user_id
-    ) == True
+    ) is True
     assert first_chat.users_id_belongs_to_chat(
         first_chat.chat_id, 
         from_user_id, 
         str(uuid.uuid4())
-    ) == False
+    ) is False

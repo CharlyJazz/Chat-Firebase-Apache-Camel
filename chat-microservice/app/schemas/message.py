@@ -6,7 +6,7 @@ class MessageSentREST(BaseModel):
     body: str
     from_user: str
     to_user: str
-    chat_id: str
+    chat_id: UUID
     
     class Config:
         schema_extra = {

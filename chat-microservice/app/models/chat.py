@@ -1,4 +1,4 @@
-from uuid import uuid1,uuid4
+from uuid import uuid4
 
 from cassandra.cqlengine import columns, connection, management, models, query
 

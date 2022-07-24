@@ -73,7 +73,7 @@ def test_pagination_and_relationship(cassandra_session):
     assert page_1[1]["body"] == conversation[9].body
     assert page_1[2]["body"] == conversation[8].body
     
-    last_time = page_1[2]["time"]
+    last_time = page_1[-1]["time"]
 
     page_2 = ChatMessages.objects(
         chat_id=str(chat_record.chat_id)
@@ -86,7 +86,7 @@ def test_pagination_and_relationship(cassandra_session):
     assert page_2[3]["body"] == conversation[4].body
     assert page_2[4]["body"] == conversation[3].body
 
-    last_time = page_2[4]["time"]
+    last_time = page_2[-1]["time"]
 
     page_3 = ChatMessages.objects(
         chat_id=str(chat_record.chat_id)
