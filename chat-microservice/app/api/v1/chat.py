@@ -48,3 +48,15 @@ async def create_chat(
         users_name = [user_1_name, user_2_name]
     )
     return new_chat
+
+@router.get(
+    "/chat/", 
+    response_model=list[ChatCreatedResponse],
+    status_code=status.HTTP_200_OK,
+    dependencies=[Depends(get_token_data)]
+)
+async def get_user_chats(current_user_id = Depends(get_current_user_id)):
+    """
+    Get all chat that belongs to the authenticated user
+    """
+    return []
