@@ -1,7 +1,6 @@
 from fastapi import Depends
 
 from app.core.kafka import kafka_producer
-from app.models.chat_messages import ChatMessages
 from app.core.config import settings
 
 from auth_validator import AuthValidator
@@ -15,12 +14,6 @@ Kafka Producer instance as dependency in order to easy mock it
 """
 def get_kafka_producer():
     return kafka_producer
-
-"""
-Model as dependency in order to easy mock it
-"""
-def get_chat_message_model():
-    return ChatMessages
 
 """
 Tiny helper to retrieve the user id from then JWT token

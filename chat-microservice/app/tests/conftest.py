@@ -1,4 +1,5 @@
 import pytest
+import uuid
 
 from jose import jwt
 
@@ -13,6 +14,7 @@ from cassandra.query import dict_factory
 
 from app.api.deps import get_kafka_producer
 from app.models.chat_messages import ChatMessages
+from app.models.chat import Chat
 from app.core import settings
 from app.main import app
 from app.tests.mocks.kafka_producer_mock import KafkaProducerMock
@@ -20,8 +22,10 @@ from app.tests.mocks.kafka_producer_mock import KafkaProducerMock
 from datetime import datetime, timedelta
 
 
-keyspace = 'python_test_environment'
-table_name = 'chat_messages'
+keyspace = settings.CASSANDRA_KEYSPACE_TESTING
+
+MAIN_FROM_USER_ID = "1"
+MAIN_TO_USER_ID = "2"
 
 @pytest.fixture()
 def cassandra_session():
@@ -41,17 +45,22 @@ def cassandra_session():
             'AND durable_writes = true;' % keyspace)
     except AlreadyExists:
         pass
+        
     
     db_session.row_factory = dict_factory
     db_session.set_keyspace(keyspace)
     connection.set_session(db_session)
+
     management.sync_table(ChatMessages)
+    management.sync_table(Chat)
+    
+    db_session.execute(f'TRUNCATE {keyspace}.{Chat.__table_name__}')
+    db_session.execute(f'TRUNCATE {keyspace}.{ChatMessages.__table_name__}')
 
     yield
 
-    db_session.execute(
-        f'TRUNCATE {keyspace}.{table_name}'
-    )
+    db_session.execute(f'TRUNCATE {keyspace}.{Chat.__table_name__}')
+    db_session.execute(f'TRUNCATE {keyspace}.{ChatMessages.__table_name__}')
 
     db_session.shutdown()
 
@@ -65,27 +74,32 @@ async def client():
         yield ac
 
 @pytest.fixture()
-def current_user_id():
-    return "1"
+def main_from_user_uid():
+    return MAIN_FROM_USER_ID
 
 @pytest.fixture()
-def user_token_header(current_user_id: str) -> dict[str, str]:
+def main_to_user_uid():
+    return MAIN_TO_USER_ID
+
+@pytest.fixture()
+def user_token_header(main_from_user_uid: str) -> dict[str, str]:
     access_token = jwt.encode(
         {
             "exp": datetime.utcnow() + timedelta(minutes=30), 
-            "user_id": current_user_id
+            "user_id": main_from_user_uid
         },
         key=settings.SECRET_KEY.get_secret_value(),
         algorithm=settings.ALGORITHM
     )
+
     return {"Authorization": f"Bearer {access_token}"}
 
 @pytest.fixture()
-def unauthorized_user_token_header(current_user_id: str) -> dict[str, str]:
+def unauthorized_user_token_header() -> dict[str, str]:
     access_token = jwt.encode(
         {
             "exp": datetime.utcnow() + timedelta(minutes=30), 
-            "user_id": "2"
+            "user_id": "3"
         },
         key=settings.SECRET_KEY.get_secret_value(),
         algorithm=settings.ALGORITHM

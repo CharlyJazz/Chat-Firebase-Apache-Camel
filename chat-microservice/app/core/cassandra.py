@@ -5,12 +5,16 @@ from cassandra.cqlengine import connection, management
 from cassandra.query import dict_factory
 
 from app.models.chat_messages import ChatMessages
+from app.models.chat import Chat
 from app.core.config import settings
 
 cassandra_cluster_global = None
 
 def cassandra_connect():
     global cassandra_cluster_global
+
+    keyspace = settings.CASSANDRA_KEYSPACE if not settings.TESTING_MODE else settings.CASSANDRA_KEYSPACE_TESTING
+
     cluster = Cluster(
         [settings.CASSANDRA_CLUSTER_ADDRESS], 
         protocol_version=settings.CASSANDRA_PROTOCOL_VERSION, 
@@ -27,14 +31,14 @@ def cassandra_connect():
         db_session.execute(
             'CREATE KEYSPACE %s WITH replication = '
             "{'class': 'SimpleStrategy', 'replication_factor': '1'} "
-            'AND durable_writes = true;' % settings.CASSANDRA_KEYSPACE)
+            'AND durable_writes = true;' % keyspace)
     except AlreadyExists:
         pass
 
-    db_session.set_keyspace(settings.CASSANDRA_KEYSPACE)
+    db_session.set_keyspace(keyspace)
     connection.set_session(db_session)
     management.sync_table(ChatMessages)
-
+    management.sync_table(Chat)
     cassandra_cluster_global = cluster
 
 def cassandra_shutdown():

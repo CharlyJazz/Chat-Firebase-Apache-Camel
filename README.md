@@ -69,3 +69,53 @@ java 17.0.2 2022-01-18 LTS
 Java(TM) SE Runtime Environment (build 17.0.2+8-LTS-86)
 Java HotSpot(TM) 64-Bit Server VM (build 17.0.2+8-LTS-86, mixed mode, sharing)
 ```
+
+
+## Docker Development Worflow
+
+### Kick off all the containers
+
+```bash
+docker-compose rm -svf && docker-compose up
+```
+
+### Run Kafka CLI:
+
+Create a topic:
+``` bash
+docker exec -it CONTAINER_ID kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 3 --topic charlytest
+```
+
+List of topics:
+``` bash
+docker exec -it CONTAINER_ID kafka-topics.sh --bootstrap-server localhost:9092 --list
+```
+
+Get topics information
+``` bash
+docker exec -it CONTAINER_ID kafka-topics.sh --bootstrap-server localhost:9092 --describe
+```
+
+Console Producer using key and acks
+
+In this case 12345 is the key and hello de message content (Useful to put all the messages in the same partition using the user_id)
+
+```bash
+docker exec -it CONTAINER_ID kafka-console-producer.sh  --bootstrap-server localhost:9092 --topic charlytest --producer-property acks=all --property parse.key=true --property key.separator=:
+
+>> 12345:hello
+```
+
+### Access to Cassandra:
+
+```bash
+docker exec -it CONTAINER_ID cqlsh
+```
+
+
+### Get the network information
+
+
+```bash
+docker network ls | grep "camel"
+```
