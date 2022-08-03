@@ -58,7 +58,7 @@ def test_pagination_and_relationship(cassandra_session):
         ChatMessages.create(
             from_user="X", 
             to_user="Y", 
-            chat_id="Z", 
+            chat_id=str(uuid.uuid4()), 
             body="Noise Message"
         )
     

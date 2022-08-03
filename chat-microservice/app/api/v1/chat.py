@@ -59,4 +59,5 @@ async def get_user_chats(current_user_id = Depends(get_current_user_id)):
     """
     Get all chat that belongs to the authenticated user
     """
-    return []
+    results = Chat.objects().filter(users_id__contains=str(current_user_id)).allow_filtering()
+    return list(results)
