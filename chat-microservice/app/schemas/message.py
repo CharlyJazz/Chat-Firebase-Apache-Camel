@@ -6,7 +6,7 @@ class MessageSentREST(BaseModel):
     body: str
     from_user: str
     to_user: str
-    chat_id: UUID
+    chat_id: str
     
     class Config:
         schema_extra = {
@@ -23,7 +23,7 @@ class MessageCreatedResponse(BaseModel):
     from_user: str
     to_user: str
     body: str
-    chat_id: str
+    chat_id: UUID
     time: UUID
 
     class Config:

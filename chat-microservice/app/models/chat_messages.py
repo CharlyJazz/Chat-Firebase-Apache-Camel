@@ -12,11 +12,11 @@ class ChatMessages(models.Model):
     Q1 - Get the last N message by a chat_id
     """
     __table_name__ = 'chat_messages'
-    chat_id    = columns.Text(primary_key=True, partition_key=True)
-    from_user  = columns.Text()
-    to_user    = columns.Text()
-    message_id = columns.UUID(default=uuid4)
-    body       = columns.Text()
+    chat_id    = columns.UUID(primary_key=True, partition_key=True, required=True)
+    from_user  = columns.Text(required=True)
+    to_user    = columns.Text(required=True)
+    message_id = columns.UUID(required=True, default=uuid4)
+    body       = columns.Text(required=True)
     time       = columns.TimeUUID(primary_key=True, default=uuid1, clustering_order='DESC')
 
     def __repr__(self):
