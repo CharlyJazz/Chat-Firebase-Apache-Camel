@@ -26,15 +26,13 @@ auth-validator = {subdirectory = "auth-validator", editable = true, git = "https
 
 [dev-packages]
 pytest = "*"
-pytest-asyncio = "*"
 pytest-cov = "*"
 flake8 = "*"
 isort = "*"
 black = "*"
 mypy = "*"
-httpx = "*"
-asgi-lifespan = "*"
 aiosqlite = "*"
+requests = "*"
 
 [requires]
 python_version = "3.9"
