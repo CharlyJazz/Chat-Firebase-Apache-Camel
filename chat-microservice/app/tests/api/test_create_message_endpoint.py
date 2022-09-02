@@ -25,7 +25,7 @@ async def test_create_chat_message_201(
       "body": f'Message Body',
       "chat_id": str(chat.chat_id)
     }
-    res = await client.post(
+    res =  client.post(
       f"/api/v1/messaging/",
       json=new_message, 
       headers=user_token_header
@@ -48,7 +48,7 @@ async def test_create_chat_message_401(
       "body": f'Message Body',
       "chat_id": "123"
     }
-    res = await client.post(
+    res =  client.post(
       f"/api/v1/messaging/",
       json=new_message, 
       headers=unauthorized_user_token_header
@@ -69,7 +69,7 @@ async def test_create_chat_message_422_no_chat_id(
       "to_user": 1,
       "body": ["Hello"]
     }
-    res = await client.post(
+    res =  client.post(
       f"/api/v1/messaging/",
       json=new_message, 
       headers=user_token_header
@@ -91,7 +91,7 @@ async def test_no_allow_create_chat_message_if_chat_not_found(
       "body": f'Message Body',
       "chat_id": str(uuid.uuid4())
     }
-    res = await client.post(
+    res =  client.post(
       f"/api/v1/messaging/",
       json=new_message, 
       headers=user_token_header
@@ -120,7 +120,7 @@ async def test_no_allow_create_chat_message_if_to_user_not_match(
       "body": f'Message Body',
       "chat_id": str(chat.chat_id)
     }
-    res = await client.post(
+    res =  client.post(
       f"/api/v1/messaging/",
       json=new_message, 
       headers=user_token_header
@@ -149,7 +149,7 @@ async def test_no_allow_create_chat_message_if_from_user_not_match(
       "body": f'Message Body',
       "chat_id": str(chat.chat_id)
     }
-    res = await client.post(
+    res =  client.post(
       f"/api/v1/messaging/",
       json=new_message, 
       headers=user_token_header

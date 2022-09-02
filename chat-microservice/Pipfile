@@ -23,6 +23,7 @@ kafka-python = "*"
 aiokafka = "*"
 cassandra-driver = "*"
 auth-validator = {subdirectory = "auth-validator", editable = true, git = "https://github.com/CharlyJazz/Chat-Firebase-Apache-Camel.git/"}
+requests = "*"
 
 [dev-packages]
 pytest = "*"
