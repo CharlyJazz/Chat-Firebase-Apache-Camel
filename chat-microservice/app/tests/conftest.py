@@ -3,8 +3,6 @@ import uuid
 
 from jose import jwt
 
-from asgi_lifespan import LifespanManager
-from httpx import AsyncClient
 from fastapi.testclient import TestClient
 
 from cassandra import AlreadyExists
@@ -70,7 +68,7 @@ async def override_dependency():
     app.dependency_overrides[get_kafka_producer] = KafkaProducerMock
 
 @pytest.fixture()
-async def client():
+def client() -> TestClient:
     return TestClient(app)
         
 
