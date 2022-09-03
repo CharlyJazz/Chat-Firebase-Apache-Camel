@@ -7,6 +7,10 @@ class MessageSentREST(BaseModel):
     from_user: str
     to_user: str
     chat_id: UUID
+    def format(self): # method to adapt UUID to str
+        var = dict(self)
+        var['chat_id'] = str(self.chat_id)
+        return var
     
     class Config:
         schema_extra = {
