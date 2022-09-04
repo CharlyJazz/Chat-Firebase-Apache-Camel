@@ -3,6 +3,7 @@ import json
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import JSONResponse
 
+import uuid
 from app.schemas.message import MessageSentREST, MessageCreatedResponse
 from app.core.config import settings
 from app.models.chat_messages import ChatMessages
@@ -44,21 +45,13 @@ async def create_message(
         )
     if not Chat.users_id_belongs_to_chat(message.chat_id, message.from_user, message.to_user):
         raise HTTPException(
-            status_code=401, detail=settings.CASSANDRA_MESSAGE_CREATION_UNAUTHORIZED
+            status_code=401, detail='users dont belong to any chat'
         )
     await kafka_producer.send_and_wait("chat_messages", message.json().encode('utf-8'))
     try:
-        record_created = ChatMessages.create(**message.__dict__)
+        record_created = ChatMessages.create(**message.format())
         return MessageCreatedResponse(**dict(record_created))
     except BaseException:
         raise HTTPException(
             status_code=400, detail=settings.CASSANDRA_MESSAGE_CREATION_ERROR
         )
-
-
-@router.get(
-    "/messaging/", 
-    status_code=status.HTTP_200_OK,
-)
-async def get_messages():
-    pass
