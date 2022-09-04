@@ -62,6 +62,7 @@ async def get_user_chats(current_user_id = Depends(get_current_user_id)):
     """
     results = Chat.objects().filter(users_id__contains=str(current_user_id)).allow_filtering()
     return list(results)
+
 @router.get(
     "/chat/messages/", 
     status_code=status.HTTP_200_OK,
@@ -88,4 +89,8 @@ async def get_messages(chat_id: str, time: str = None, quantity: int = 5):
         raise HTTPException(
             status_code=422, detail='there is no chat messages corresponding to those specifications'
         )
+<<<<<<< HEAD
     return list_msg
+=======
+    return list_msg
+>>>>>>> 0569fff97ed8ce62b0ed61cfcbc36c5516210524
