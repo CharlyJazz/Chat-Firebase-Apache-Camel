@@ -62,6 +62,7 @@ async def get_user_chats(current_user_id = Depends(get_current_user_id)):
     """
     results = Chat.objects().filter(users_id__contains=str(current_user_id)).allow_filtering()
     return list(results)
+
 @router.get(
     "/chat/messages/", 
     status_code=status.HTTP_200_OK,
