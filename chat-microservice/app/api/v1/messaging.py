@@ -47,7 +47,7 @@ async def create_message(
         )
     await kafka_producer.send_and_wait("chat_messages", message.json().encode('utf-8'))
     try:
-        record_created = ChatMessages.create(**message.__init__)
+        record_created = ChatMessages.create(**message.__dict__)
         return MessageCreatedResponse(**dict(record_created))
     except BaseException:
         raise HTTPException(

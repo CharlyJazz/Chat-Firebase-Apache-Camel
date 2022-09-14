@@ -1,7 +1,7 @@
 import pytest
 import uuid
 
-from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi.testclient import TestClient
 
 from app.models.chat_messages import ChatMessages
 from app.models.chat import Chat
@@ -16,10 +16,10 @@ class ChatMessage:
     chat_id: str
     body: str
 
-@pytest.mark.asyncio()
+
 async def test_pagination_get_messages(
     cassandra_session,
-    client: AsyncSession, 
+    client: TestClient, 
     user_token_header,
 ):
     
@@ -58,13 +58,13 @@ async def test_pagination_get_messages(
         ChatMessages.create(
             from_user="X", 
             to_user="Y", 
-            chat_id="Z", 
+            chat_id=str(uuid.uuid4()), 
             body="Noise Message"
         )
     
     assert ChatMessages.objects().count() == len(conversation) * 2
     
-    page_1 = await client.get(
+    page_1 = client.get(
       f"/api/v1/chat/messages/",
       json={
         "chat_id": str(chat_record.chat_id),
@@ -81,7 +81,7 @@ async def test_pagination_get_messages(
     
     last_time = page_1[-1]["time"]
 
-    page_2 = await client.get(
+    page_2 = client.get(
       f"/api/v1/chat/messages/",
       json={
         "chat_id": str(chat_record.chat_id),
@@ -101,7 +101,7 @@ async def test_pagination_get_messages(
 
     last_time = page_2[-1]["time"]
 
-    page_3 = await client.get(
+    page_3 = client.get(
       f"/api/v1/chat/messages/",
       json={
         "chat_id": str(chat_record.chat_id),
