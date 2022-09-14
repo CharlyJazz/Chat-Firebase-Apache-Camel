@@ -74,10 +74,6 @@ async def test_pagination_get_messages(
     )
     assert page_1.status_code == 200
 
-    """page_1 = ChatMessages.objects(
-        chat_id=str(chat_record.chat_id)
-    ).limit(3)"""
-
     assert len(page_1) == 3
     assert page_1[0]["body"] == conversation[10].body
     assert page_1[1]["body"] == conversation[9].body
@@ -95,10 +91,6 @@ async def test_pagination_get_messages(
       headers=user_token_header
     )
     assert page_2.status_code == 200
-
-    """page_2 = ChatMessages.objects(
-        chat_id=str(chat_record.chat_id)
-    ).filter(time__lt=last_time).limit(5)"""
 
     assert len(page_2) == 5
     assert page_2[0]["body"] == conversation[7].body
@@ -119,10 +111,6 @@ async def test_pagination_get_messages(
       headers=user_token_header
     )
     assert page_2.status_code == 200
-
-    """page_3 = ChatMessages.objects(
-        chat_id=str(chat_record.chat_id)
-    ).filter(time__lt=last_time).limit(5)"""
 
     assert len(page_3) == 3
     assert page_3[0]["body"] == conversation[2].body

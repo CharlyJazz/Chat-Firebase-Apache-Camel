@@ -2,9 +2,9 @@ import json
 import uuid
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.responses import JSONResponse
 
 from app.schemas.chat import ChatSentREST, ChatCreatedResponse
+from app.schemas.message import GetMessageValidator
 from app.core.config import settings
 from app.models.chat import Chat
 from app.models.chat_messages import ChatMessages
@@ -64,29 +64,28 @@ async def get_user_chats(current_user_id = Depends(get_current_user_id)):
     return list(results)
 
 @router.get(
-    "/chat/messages/", 
+    "/chat/{chat_id}/messages/", 
     status_code=status.HTTP_200_OK,
+    dependencies=[Depends(get_token_data)]
 )
-async def get_messages(chat_id: str, time: str = None, quantity: int = 5):
+async def get_messages(chat_message: GetMessageValidator = Depends()):
     """
+    chat_id: str, time: str = None, quantity: int = 5
     Get chat messages between users using this endpoint.
     - **chat_id**: ID of the chat between users
     - **time**: get the chat messages sorted by the time
     - **quantity**: limit of the messages that you will receive
     """
-    list_msg = []
-    query = ChatMessages.objects(chat_id=chat_id).order_by("time")
-    if time == None:
-        time = str(query.first()["time"])
-    time_get = False
-    index = 0
-    for msg in query:
-        if str(msg.time) == time or time_get and index < quantity:
-            list_msg.append(msg)
-            time_get = True
-            index = index+1
-    if not list_msg:
+    if chat_message.chat_id_validator(chat_message.chat_id):
         raise HTTPException(
-            status_code=422, detail='there is no chat messages corresponding to those specifications'
+            status_code=404, detail=settings.GET_MESSAGES_CHAT_ID_ERROR
         )
-    return list_msg
+    if chat_message.chat_time_validator(chat_message.chat_id, chat_message.get_time(chat_message.chat_id, chat_message.time)):
+        raise HTTPException(
+            status_code=404, detail=settings.GET_MESSAGES_TIME_ERROR
+        )
+    if chat_message.quantity_validator(chat_message.quantity):
+        raise HTTPException(
+            status_code=422, detail=settings.GET_MESSAGES_QUANTITY_ERROR
+        )
+    return list(ChatMessages.objects(chat_id=chat_message.chat_id).filter(time__lte=chat_message.get_time(chat_message.chat_id, chat_message.time)).limit(chat_message.quantity))
