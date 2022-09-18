@@ -1,7 +1,6 @@
 import json
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.responses import JSONResponse
 
 from app.schemas.message import MessageSentREST, MessageCreatedResponse
 from app.core.config import settings
@@ -54,11 +53,3 @@ async def create_message(
         raise HTTPException(
             status_code=400, detail=settings.CASSANDRA_MESSAGE_CREATION_ERROR
         )
-
-
-@router.get(
-    "/messaging/", 
-    status_code=status.HTTP_200_OK,
-)
-async def get_messages():
-    pass

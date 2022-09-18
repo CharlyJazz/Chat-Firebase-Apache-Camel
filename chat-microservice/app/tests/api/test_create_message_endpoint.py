@@ -17,7 +17,7 @@ def test_create_chat_message_201(
       chat_id = str(uuid.uuid4()),
       users_id = [main_from_user_uid, main_to_user_uid],
       users_name = ["Frank", "Pepe"]
-  )  
+  )
   new_message = {
     "from_user": main_from_user_uid,
     "to_user": main_to_user_uid,
