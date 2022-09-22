@@ -1,8 +1,6 @@
-import json
 import uuid
 
 from fastapi import APIRouter, Depends, HTTPException, status
-
 from app.schemas.chat import ChatSentREST, ChatCreatedResponse
 from app.schemas.message import GetMessageValidator
 from app.core.config import settings
@@ -70,7 +68,6 @@ async def get_user_chats(current_user_id = Depends(get_current_user_id)):
 )
 async def get_messages(chat_message: GetMessageValidator = Depends()):
     """
-    chat_id: str, time: str = None, quantity: int = 5
     Get chat messages between users using this endpoint.
     - **chat_id**: ID of the chat between users
     - **time**: get the chat messages sorted by the time

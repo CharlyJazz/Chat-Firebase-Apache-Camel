@@ -11,12 +11,13 @@ from cassandra.policies import RoundRobinPolicy
 from cassandra.cqlengine import connection, management
 from cassandra.query import dict_factory
 
-from app.api.deps import get_kafka_producer
+from app.api.deps import get_kafka_producer, get_logging_event
 from app.models.chat_messages import ChatMessages
 from app.models.chat import Chat
 from app.core import settings
 from app.main import app
 from app.tests.mocks.kafka_producer_mock import KafkaProducerMock
+from app.tests.mocks.set_logging_event_mock import SetLoggingEvent
 
 from datetime import datetime, timedelta
 
@@ -66,6 +67,7 @@ def cassandra_session():
 @pytest.fixture(autouse=True)
 async def override_dependency():
     app.dependency_overrides[get_kafka_producer] = KafkaProducerMock
+    app.dependency_overrides[get_logging_event] = SetLoggingEvent
 
 @pytest.fixture()
 def client() -> TestClient:

@@ -2,6 +2,7 @@ from fastapi import Depends
 
 from app.core.kafka import kafka_producer
 from app.core.config import settings
+from app.core.logging import Logging
 
 from auth_validator import AuthValidator
 
@@ -20,3 +21,9 @@ Tiny helper to retrieve the user id from then JWT token
 """
 async def get_current_user_id(token = Depends(get_token_data)) -> str:
     return token.user_id
+
+"""
+Logging to handle start events that are outside from uvicorn request middleware
+"""
+def get_logging_event():
+    return Logging
