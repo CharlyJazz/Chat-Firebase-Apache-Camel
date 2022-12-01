@@ -1,5 +1,6 @@
 import os
 
+import logging
 from typing import Any, Optional
 from pydantic import BaseSettings, SecretStr, validator
 
@@ -22,6 +23,8 @@ class Settings(BaseSettings):
     KAFKA_BOOTSTRAP_SERVER: str
     CASSANDRA_KEYSPACE_TESTING: str = 'python_test_environment'
     MAX_MESSAGES_QUANTITY_PAGINATION = 20
+    logging.basicConfig(filename="logs.txt", filemode='a', format='%(asctime)s %(levelname)s-%(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+    logging.getLogger().setLevel(logging.INFO)
 
     class Config:
         # Relative to main.py

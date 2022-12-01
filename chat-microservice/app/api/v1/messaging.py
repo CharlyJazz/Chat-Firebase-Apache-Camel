@@ -9,22 +9,24 @@ from app.models.chat import Chat
 from ..deps import (
     get_kafka_producer,
     get_token_data,
-    get_current_user_id
+    get_current_user_id,
+    get_logging_event
 )
 
 
 router = APIRouter(tags=["Messaging"])
 
 @router.post(
-    "/messaging/", 
-    response_model=MessageCreatedResponse, 
+    "/messaging/",
+    response_model=MessageCreatedResponse,
     status_code=status.HTTP_201_CREATED,
     dependencies=[Depends(get_token_data)]
 )
 async def create_message(
-    message: MessageSentREST, 
+    message: MessageSentREST,
     kafka_producer = Depends(get_kafka_producer),
-    current_user_id = Depends(get_current_user_id)
+    current_user_id = Depends(get_current_user_id),
+    Logging = Depends(get_logging_event)
 ):
     """
     The user send a message using this endpoint
@@ -45,6 +47,7 @@ async def create_message(
         raise HTTPException(
             status_code=401, detail=settings.CASSANDRA_MESSAGE_CREATION_UNAUTHORIZED
         )
+    Logging.info('Kafka Producer Initialized')
     await kafka_producer.send_and_wait("chat_messages", message.json().encode('utf-8'))
     try:
         record_created = ChatMessages.create(**message.__dict__)
