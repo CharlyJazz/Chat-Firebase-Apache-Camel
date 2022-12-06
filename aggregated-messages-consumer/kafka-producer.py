@@ -12,27 +12,43 @@ producer = KafkaProducer(
 
 MESSAGES = [
   {
-    "user_id": "charlyjazz",
-    "message": "Hello bro"
+    "from_user": "charlyjazz",
+    "to_user": "other_user",
+    "body": "Hello other user",
+    "chat_id": 2
   },
   {
-    "user_id": "evil",
-    "message": "What?"
-  },
-    {
-    "user_id": "charlyjazz",
-    "message": "Pepe le pu"
+    "from_user": "charlyjazz",
+    "to_user": "evil",
+    "body": "Hello bro",
+    "chat_id": 1
   },
   {
-    "user_id": "evil",
-    "message": "Ohh I see"
+    "from_user": "evil",
+    "to_user": "charlyjazz",
+    "body": "What?",
+    "chat_id": 1
   },
   {
-    "user_id": "charlyjazz",
-    "message": "Bye bro"
+    "from_user": "charlyjazz",
+    "to_user": "evil",
+    "body": "Pepe le pu",
+    "chat_id": 1
+  },
+  {
+    "from_user": "evil",
+    "to_user": "charlyjazz",
+    "body": "Ohh I see",
+    "chat_id": 1
+  },
+  {
+    "from_user": "charlyjazz",
+    "to_user": "evil",
+    "body": "Bye bro",
+    "chat_id": 1
   }
 ]
 
 for i in MESSAGES:
-    producer.send('chat', json.dumps(i).encode('utf-8'))
+    producer.send('chat_messages', json.dumps(i).encode('utf-8'))
     producer.flush()
