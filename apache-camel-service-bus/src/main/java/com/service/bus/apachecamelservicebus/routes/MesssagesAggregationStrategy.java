@@ -22,12 +22,12 @@ public class MesssagesAggregationStrategy implements AggregationStrategy {
 		MessagesByUser messagesByUser = null;
 
         if (oldExchange == null) {
-        	messagesByUser = new MessagesByUser(message.getFrom_user(), message.getBody());
+        	messagesByUser = new MessagesByUser(message.getFrom_user(), message.getChat_id(), message);
             newExchange.getIn().setBody(messagesByUser);
             return newExchange;
         } else {
         	MessagesByUser currentMessagesByUser = oldExchange.getIn().getBody(MessagesByUser.class);
-        	currentMessagesByUser.addMessage(message.getBody());
+        	currentMessagesByUser.addMessage(message);
         	return oldExchange;
         }			
 	}

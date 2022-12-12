@@ -5,17 +5,21 @@ public class ChatMessage {
 	private String to_user;
 	private String chat_id;
 	private String body;
+	private String time;
+	private String message_id;
 	
 	public ChatMessage() {
 		
 	}
 	
-	public ChatMessage(String from_user, String body, String to_user, String chat_id) {
+	public ChatMessage(String from_user, String body, String to_user, String chat_id, String time, String message_id) {
 		super();
-		this.from_user = from_user;
-		this.body = body;
-		this.to_user = to_user;
 		this.chat_id = chat_id;
+		this.from_user = from_user;
+		this.to_user = to_user;
+		this.message_id = message_id;
+		this.body = body;
+		this.time = time;
 	}
 
 	public String getFrom_user() {
@@ -48,5 +52,21 @@ public class ChatMessage {
 
 	public void setChat_id(String chat_id) {
 		this.chat_id = chat_id;
+	}
+
+	public String getTime() {
+		return time;
+	}
+
+	public void setTime(String time) {
+		this.time = time;
+	}
+
+	public String getMessage_id() {
+		return message_id;
+	}
+
+	public void setMessage_id(String message_id) {
+		this.message_id = message_id;
 	}
 }
