@@ -46,27 +46,27 @@ public class ChatMessagesRouterJUnitTest extends CamelTestSupport {
         
         MessagesByUser messages1 = group_1.getIn().getBody(MessagesByUser.class);
         
-        assertEquals("Hell 1 1th Group", messages1.getList_of_messages().get(0));
-        assertEquals("Hell 2 1th Group", messages1.getList_of_messages().get(1));
-        assertEquals("Hell 3 1th Group", messages1.getList_of_messages().get(2));
+        assertEquals("Hell 1 1th Group", messages1.getList_of_messages().get(0).getBody());
+        assertEquals("Hell 2 1th Group", messages1.getList_of_messages().get(1).getBody());
+        assertEquals("Hell 3 1th Group", messages1.getList_of_messages().get(2).getBody());
         
         Exchange group_2 = mock.getExchanges().get(1);
         
         MessagesByUser messages2 = group_2.getIn().getBody(MessagesByUser.class);
         
-        assertEquals("Hell 1 2th Group", messages2.getList_of_messages().get(0));
-        assertEquals("Hell 2 2th Group", messages2.getList_of_messages().get(1));
+        assertEquals("Hell 1 2th Group", messages2.getList_of_messages().get(0).getBody());
+        assertEquals("Hell 2 2th Group", messages2.getList_of_messages().get(1).getBody());
         
         Exchange group_3 = mock.getExchanges().get(2);
         
         MessagesByUser messages3 = group_3.getIn().getBody(MessagesByUser.class);
         
 
-        assertEquals("Hell 1 3th Group", messages3.getList_of_messages().get(0));
-        assertEquals("Hell 2 3th Group", messages3.getList_of_messages().get(1));
-        assertEquals("Hell 3 3th Group", messages3.getList_of_messages().get(2));
-        assertEquals("Hell 4 3th Group", messages3.getList_of_messages().get(3));
-        assertEquals("Hell 5 3th Group", messages3.getList_of_messages().get(4));
+        assertEquals("Hell 1 3th Group", messages3.getList_of_messages().get(0).getBody());
+        assertEquals("Hell 2 3th Group", messages3.getList_of_messages().get(1).getBody());
+        assertEquals("Hell 3 3th Group", messages3.getList_of_messages().get(2).getBody());
+        assertEquals("Hell 4 3th Group", messages3.getList_of_messages().get(3).getBody());
+        assertEquals("Hell 5 3th Group", messages3.getList_of_messages().get(4).getBody());
     }
 
     @Override
