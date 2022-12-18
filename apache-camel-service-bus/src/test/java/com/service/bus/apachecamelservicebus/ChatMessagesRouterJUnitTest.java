@@ -76,7 +76,7 @@ public class ChatMessagesRouterJUnitTest extends CamelTestSupport {
             public void configure() {
         		from("direct:chat_messages")
         		.unmarshal().json(JsonLibrary.Jackson, ChatMessage.class) 
-        		.aggregate(simple("${body.from_user}"), new MesssagesAggregationStrategy())
+        		.aggregate(simple("${body.from_user}-${body.chat_id}"), new MesssagesAggregationStrategy())
         		.completionSize(10)
         		.completionTimeout(1500)
         		.to("mock:chat_messages_grouped");
