@@ -65,7 +65,7 @@ def cassandra_session():
     db_session.shutdown()
 
 @pytest.fixture(autouse=True)
-async def override_dependency():
+def override_dependency():
     app.dependency_overrides[get_kafka_producer] = KafkaProducerMock
     app.dependency_overrides[get_logging_event] = SetLoggingEvent
 

@@ -19,11 +19,11 @@
 
 Cassandra Tests
 
-`pytest app/tests/cassandra --disable-warnings -rP`
+`pipenv run db-test`
 
 Server Tests
 
-`export TESTING_MODE=1 && pytest app/tests/api --disable-warnings -rP`
+`export TESTING_MODE=1 && pipenv run api-test`
 
 Run a specific test case
 

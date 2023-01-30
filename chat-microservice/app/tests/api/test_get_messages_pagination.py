@@ -17,12 +17,11 @@ class ChatMessage:
     body: str
 
 
-async def test_pagination_get_messages(
+def test_pagination_get_messages(
     cassandra_session,
     client: TestClient, 
-    user_token_header,
+    user_token_header
 ):
-    
     frank_id = str(uuid.uuid4())
     pepe_id = str(uuid.uuid4())
     
@@ -64,55 +63,63 @@ async def test_pagination_get_messages(
     
     assert ChatMessages.objects().count() == len(conversation) * 2
     
-    page_1 = client.get(
-      f"/api/v1/chat/messages/",
-      json={
+    res = client.get(
+      f"/api/v1/chat/{chat_record.chat_id}/messages/",
+      params={
         "chat_id": str(chat_record.chat_id),
         "quantity": 3
       },
       headers=user_token_header
     )
-    assert page_1.status_code == 200
+    assert res.status_code == 200
 
-    assert len(page_1) == 3
-    assert page_1[0]["body"] == conversation[10].body
-    assert page_1[1]["body"] == conversation[9].body
-    assert page_1[2]["body"] == conversation[8].body
+    data = res.json()
     
-    last_time = page_1[-1]["time"]
+    assert len(data) == 3
 
-    page_2 = client.get(
-      f"/api/v1/chat/messages/",
-      json={
+    assert data[0]["body"] == conversation[10].body
+    assert data[1]["body"] == conversation[9].body
+    assert data[2]["body"] == conversation[8].body
+    
+    last_time = data[-1]["time"] # By the way Frank, I need your help
+
+    res = client.get(
+      f"/api/v1/chat/{chat_record.chat_id}/messages/",
+      params={
         "chat_id": str(chat_record.chat_id),
         "time": last_time,
         "quantity": 5
       },
       headers=user_token_header
     )
-    assert page_2.status_code == 200
+    assert res.status_code == 200
+    
+    data = res.json()
 
-    assert len(page_2) == 5
-    assert page_2[0]["body"] == conversation[7].body
-    assert page_2[1]["body"] == conversation[6].body
-    assert page_2[2]["body"] == conversation[5].body
-    assert page_2[3]["body"] == conversation[4].body
-    assert page_2[4]["body"] == conversation[3].body
+    assert len(data) == 5
 
-    last_time = page_2[-1]["time"]
+    assert data[0]["body"] == conversation[7].body
+    assert data[1]["body"] == conversation[6].body
+    assert data[2]["body"] == conversation[5].body
+    assert data[3]["body"] == conversation[4].body
+    assert data[4]["body"] == conversation[3].body
 
-    page_3 = client.get(
-      f"/api/v1/chat/messages/",
-      json={
+    last_time = data[-1]["time"]
+
+    res = client.get(
+      f"/api/v1/chat/{chat_record.chat_id}/messages/",
+      params={
         "chat_id": str(chat_record.chat_id),
         "time": last_time,
         "quantity": 5
       },
       headers=user_token_header
     )
-    assert page_2.status_code == 200
+    assert res.status_code == 200
 
-    assert len(page_3) == 3
-    assert page_3[0]["body"] == conversation[2].body
-    assert page_3[1]["body"] == conversation[1].body
-    assert page_3[2]["body"] == conversation[0].body
+    data = res.json()
+
+    assert len(data) == 3
+    assert data[0]["body"] == conversation[2].body
+    assert data[1]["body"] == conversation[1].body
+    assert data[2]["body"] == conversation[0].body

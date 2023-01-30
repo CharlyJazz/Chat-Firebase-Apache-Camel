@@ -85,4 +85,17 @@ async def get_messages(chat_message: GetMessageValidator = Depends()):
         raise HTTPException(
             status_code=422, detail=settings.GET_MESSAGES_QUANTITY_ERROR
         )
-    return list(ChatMessages.objects(chat_id=chat_message.chat_id).filter(time__lte=chat_message.get_time(chat_message.chat_id, chat_message.time)).limit(chat_message.quantity))
+
+    if chat_message.time == None:
+        return list(
+            ChatMessages
+                .objects(chat_id=chat_message.chat_id)
+                .limit(chat_message.quantity)
+            )
+    else:
+        return list(
+            ChatMessages
+                .objects(chat_id=chat_message.chat_id)
+                .filter(time__lt=chat_message.time)
+                .limit(chat_message.quantity)
+            )

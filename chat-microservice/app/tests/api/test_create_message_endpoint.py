@@ -24,7 +24,7 @@ def test_create_chat_message_201(
     "body": f'Message Body',
     "chat_id": str(chat.chat_id)
   }
-  res =  client.post(
+  res = client.post(
     f"/api/v1/messaging/",
     json=new_message, 
     headers=user_token_header

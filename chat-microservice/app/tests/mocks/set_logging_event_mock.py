@@ -1,3 +1,3 @@
 class SetLoggingEvent:
-  async def set_logging_event(self):
+  def info(self, message):
     pass
