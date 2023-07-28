@@ -1,0 +1,13 @@
+.Container {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+}
+
+.Block {
+    border: solid 1px #d8d8d8;
+    padding: 10px;
+}
