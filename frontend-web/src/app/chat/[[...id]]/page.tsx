@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Layout,
   Menu,
@@ -14,6 +14,7 @@ import {
   Row,
   Col,
 } from "antd";
+import { useParams, useRouter } from "next/navigation";
 
 const { Sider, Content } = Layout;
 
@@ -21,6 +22,11 @@ const ChatPage = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [messages, setMessages] = useState([]);
   const [messageText, setMessageText] = useState("");
+
+  const route = useRouter()
+  const params = useParams () as {
+    id?: string
+  }
 
   const users = [
     // Replace with your list of users with id and name properties
@@ -31,9 +37,7 @@ const ChatPage = () => {
   ];
 
   const handleUserSelect = (user) => {
-    setSelectedUser(user);
-    // Fetch messages for the selected user from your backend or mock data
-    // and set them using setMessages() here
+    route.replace(`/chat/${user.id}`)
   };
 
   const handleSendMessage = () => {
@@ -42,6 +46,15 @@ const ChatPage = () => {
     setMessages([...messages, { sender: "You", text: messageText }]);
     setMessageText("");
   };
+
+  useEffect(() => {
+    if (params.id) {
+      setSelectedUser(users[params.id - 1])
+      // Set Current User
+      // Fetch messages for the selected user from your backend or mock data
+      // and set them using setMessages() here
+    }
+  }, [])
 
   return (
     <>
