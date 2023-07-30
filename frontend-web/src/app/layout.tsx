@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "",
-  description: "",
+  title: "Chat",
+  description: "Chat micros and front-end interactions"
 };
 
 export default function RootLayout({
