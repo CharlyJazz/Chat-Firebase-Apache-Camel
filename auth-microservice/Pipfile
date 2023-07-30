@@ -20,6 +20,7 @@ python-dotenv = "*"
 bcrypt = "*"
 factory-boy = "*"
 auth-validator = {subdirectory = "auth-validator", editable = true, git = "https://github.com/CharlyJazz/Chat-Firebase-Apache-Camel.git/"}
+pydantic-settings = "*"
 
 [dev-packages]
 pytest = "*"
