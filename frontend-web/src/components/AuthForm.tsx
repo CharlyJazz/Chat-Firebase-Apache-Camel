@@ -1,10 +1,10 @@
-import React from 'react';
-import { Form, Input, Button, Typography } from 'antd';
+import React, { useState } from "react";
+import { Form, Input, Button, Typography } from "antd";
 
 export interface Props {
-    title: string;
-    submitButtonText: string;
-    onFinish: (args: AuthPayload) => void
+  title: string;
+  submitButtonText: string;
+  onFinish: (args: AuthPayload) => void;
 }
 
 export interface AuthPayload {
@@ -23,7 +23,7 @@ const AuthForm = ({ title, submitButtonText, onFinish }: Props) => {
           rules={[
             {
               required: true,
-              message: 'Please enter your username!',
+              message: "Please enter your username!",
             },
           ]}
         >
@@ -36,7 +36,7 @@ const AuthForm = ({ title, submitButtonText, onFinish }: Props) => {
           rules={[
             {
               required: true,
-              message: 'Please enter your password!',
+              message: "Please enter your password!",
             },
           ]}
         >

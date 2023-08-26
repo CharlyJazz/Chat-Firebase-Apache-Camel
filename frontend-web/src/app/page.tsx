@@ -12,7 +12,7 @@ const Login = () => {
   const route = useRouter();
 
   const handleLogin = (args: AuthPayload) => {
-    fetch(`${process.env.NEXT_PUBLIC_AUTH_MICROSERVICE}/api/v1/login/`, {
+    fetch(`${process.env.NEXT_PUBLIC_AUTH_MICROSERVICE}/api/v1/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",

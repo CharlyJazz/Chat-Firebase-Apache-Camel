@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Chat",
-  description: "Chat micros and front-end interactions"
+  description: "Chat micros and front-end interactions",
 };
 
 export default function RootLayout({
@@ -11,9 +11,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" style={{
-      overflowY: 'hidden'
-    }}>
+    <html
+      lang="en"
+      style={{
+        overflowY: "hidden",
+      }}
+    >
       <body>{children}</body>
     </html>
   );
