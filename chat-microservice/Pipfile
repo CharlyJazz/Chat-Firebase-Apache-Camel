@@ -42,4 +42,4 @@ python_version = "3.9"
 [scripts]
 db-test="pytest app/tests/cassandra --disable-warnings -rP"
 api-test="pytest app/tests/api --disable-warnings -rP"
-run="uvicorn app.main:app --host 0.0.0.0 --port 9000  --reload"
+server="uvicorn app.main:app --host 0.0.0.0 --port 9000 --reload"
