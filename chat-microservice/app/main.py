@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.api import router
 from app.core.config import settings
@@ -20,6 +21,14 @@ async def shutdown_event():
 
 def create_application() -> FastAPI:
     application = FastAPI(title=settings.PROJECT_NAME)
+    origins = [ "http://localhost:3000" ]
+    application.add_middleware(
+        CORSMiddleware,
+        allow_origins=origins,
+        allow_credentials=True,
+        allow_methods=["GET", "POST", "PUT", "DELETE"],
+        allow_headers=["*"],
+    )
     application.include_router(router)
     application.add_event_handler("startup", startup_event)
     application.add_event_handler("shutdown", shutdown_event)

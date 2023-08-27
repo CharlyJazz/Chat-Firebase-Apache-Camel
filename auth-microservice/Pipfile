@@ -20,6 +20,7 @@ python-dotenv = "*"
 bcrypt = "*"
 factory-boy = "*"
 auth-validator = {subdirectory = "auth-validator", editable = true, git = "https://github.com/CharlyJazz/Chat-Firebase-Apache-Camel.git/"}
+pydantic-settings = "*"
 
 [dev-packages]
 pytest = "*"
@@ -35,3 +36,7 @@ aiosqlite = "*"
 
 [requires]
 python_version = "3.9"
+
+[scripts]
+api-test="pytest app/tests --disable-warnings -rP"
+server="uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"

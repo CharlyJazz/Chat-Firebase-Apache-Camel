@@ -1,6 +1,7 @@
 from typing import Any, Optional
 
-from pydantic import BaseSettings, SecretStr, validator
+from pydantic import SecretStr, validator
+from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
