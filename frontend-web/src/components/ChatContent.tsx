@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { List, Input, Button, Row, Col } from "antd";
+import useCreateChat from "@/api/hooks/useCreateChat";
+import { useAuth } from "@/lib/Authentication";
 
 interface Message {
   sender: string;
@@ -11,13 +13,27 @@ interface ChatContentProps {
 }
 
 const ChatContent: React.FC<ChatContentProps> = ({ selectedUser }) => {
-  const [messages, setMessages] = useState<Message[]>([]); // Mock messages state
+  const [messages, setMessages] = useState<Message[]>([]);
   const [messageText, setMessageText] = useState("");
+  const {
+    authState: { username: currentUsername, id: currentId },
+  } = useAuth();
+  const { chatCreated, chatCreationLoading, createChat, errorCreatingChat } =
+    useCreateChat();
 
   const handleSendMessage = () => {
     setMessages([...messages, { sender: "You", text: messageText }]);
     setMessageText("");
   };
+
+  useEffect(() => {
+    if (selectedUser) {
+      createChat({
+        users_id: [currentId, String(selectedUser.id)],
+        users_name: [currentUsername, selectedUser.username],
+      });
+    }
+  }, [selectedUser]);
 
   return (
     <div

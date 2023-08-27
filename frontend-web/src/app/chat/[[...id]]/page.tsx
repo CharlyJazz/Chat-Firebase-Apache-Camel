@@ -1,11 +1,10 @@
 "use client";
 
+import useGetUsers from "@/api/hooks/useGetUsers"; // Update the path as per your project structure
 import ChatContent from "@/components/ChatContent";
-import { fetcher } from "@/lib/swr-fetcher";
 import { Avatar, Badge, Layout, Menu, Space, Spin, Typography } from "antd";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import useSWR from "swr";
 
 const { Sider, Content } = Layout;
 
@@ -15,14 +14,7 @@ const ChatPage = () => {
   const route = useRouter();
   const params = useParams() as { id?: string[] };
 
-  const {
-    data: usersData,
-    error: usersError,
-    isLoading: usersLoading,
-  } = useSWR<User[]>(
-    `${process.env.NEXT_PUBLIC_AUTH_MICROSERVICE}/api/v1/users`,
-    fetcher
-  );
+  const { usersData, usersError, usersLoading } = useGetUsers();
 
   const users = usersData || [];
 
@@ -39,7 +31,6 @@ const ChatPage = () => {
         setSelectedUser(user);
       }
     }
-    console.log(params);
   }, [params.id, users]);
 
   if (usersLoading) {

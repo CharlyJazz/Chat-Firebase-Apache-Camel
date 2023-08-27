@@ -1,3 +1,4 @@
+import { AuthProvider } from "@/lib/Authentication";
 import type { Metadata } from "next";
 import StyledComponentsRegistry from "../lib/AntdRegistry";
 
@@ -19,7 +20,9 @@ export default function RootLayout({
       }}
     >
       <body>
-        <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
+        <StyledComponentsRegistry>
+          <AuthProvider>{children}</AuthProvider>
+        </StyledComponentsRegistry>
       </body>
     </html>
   );

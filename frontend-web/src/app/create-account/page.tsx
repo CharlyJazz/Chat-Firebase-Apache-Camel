@@ -4,31 +4,33 @@ import { message, Typography } from "antd";
 import Link from "next/link";
 import styles from "./page.module.css";
 
-import AuthForm, { AuthPayload } from "@/components/AuthForm";
+import AuthForm from "@/components/AuthForm";
 import { useRouter } from "next/navigation";
+import { fetcher } from "@/lib/swr-fetcher"; // Import the fetcher
 
 const CreateAccount = () => {
   const [messageApi, contextHolder] = message.useMessage();
-  const route = useRouter()
-  const handleRegister = (args: AuthPayload) => {
-    fetch(`${process.env.NEXT_PUBLIC_AUTH_MICROSERVICE}/api/v1/users/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username: args.username,
-        password: args.password,
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.detail) {
-          messageApi.info(data.detail, 3);
-        } else {
-          route.replace('/')
+  const route = useRouter();
+
+  const handleRegister = async (args: CreateUserPayload) => {
+    try {
+      const data = await fetcher<UserCreatedResponse>(
+        `${process.env.NEXT_PUBLIC_AUTH_MICROSERVICE}/api/v1/users/`,
+        "POST",
+        {
+          username: args.username,
+          password: args.password,
         }
-      });
+      );
+
+      if (data.detail) {
+        messageApi.info(data.detail, 3);
+      } else {
+        route.replace("/");
+      }
+    } catch (error) {
+      console.error("Error during registration:", error);
+    }
   };
 
   return (
@@ -41,7 +43,7 @@ const CreateAccount = () => {
           onFinish={handleRegister}
         />
         <Link href="/">
-          <Typography.Text>Already have a account?</Typography.Text>
+          <Typography.Text>Already have an account?</Typography.Text>
         </Link>
       </div>
     </div>

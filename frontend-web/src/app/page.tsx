@@ -4,41 +4,44 @@ import { message, Typography } from "antd";
 import Link from "next/link";
 import styles from "./page.module.css";
 
-import AuthForm, { AuthPayload } from "@/components/AuthForm";
+import AuthForm from "@/components/AuthForm";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/lib/Authentication";
+import { fetcher } from "@/lib/swr-fetcher";
 
 const Login = () => {
   const [messageApi, contextHolder] = message.useMessage();
+
   const route = useRouter();
 
-  const handleLogin = (args: AuthPayload) => {
-    fetch(`${process.env.NEXT_PUBLIC_AUTH_MICROSERVICE}/api/v1/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: new URLSearchParams({
-        username: args.username,
-        password: args.password,
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.detail) {
-          messageApi.info("Credentials are wrong", 3);
-        } else {
-          localStorage.setItem(
-            "USER_SESION",
-            JSON.stringify({
-              username: args.password,
-              ...data,
-            })
-          );
-          messageApi.info("User authenticated", 2, () => {
-            route.replace("/chat");
-          });
+  const { login } = useAuth();
+
+  const handleLogin = async (args: CreateUserPayload) => {
+    try {
+      const data = await fetcher<AuthenticatedUserResponse>(
+        `${process.env.NEXT_PUBLIC_AUTH_MICROSERVICE}/api/v1/login`,
+        "POST",
+        {
+          username: args.username,
+          password: args.password,
+        },
+        {
+          "Content-Type": "application/x-www-form-urlencoded",
         }
-      });
+      );
+
+      if (data.detail) {
+        messageApi.info("Credentials are wrong", 3);
+      } else {
+        login(data);
+
+        messageApi.info("User authenticated", 2, () => {
+          route.replace("/chat");
+        });
+      }
+    } catch (error) {
+      messageApi.info("Error during login", 3);
+    }
   };
 
   return (
