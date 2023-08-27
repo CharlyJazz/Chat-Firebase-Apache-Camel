@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import StyledComponentsRegistry from "../lib/AntdRegistry";
 
 export const metadata: Metadata = {
   title: "Chat",
@@ -17,7 +18,9 @@ export default function RootLayout({
         overflowY: "hidden",
       }}
     >
-      <body>{children}</body>
+      <body>
+        <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
+      </body>
     </html>
   );
 }
