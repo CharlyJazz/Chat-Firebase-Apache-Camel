@@ -13,7 +13,7 @@ const useGetCurrentUserChats = () => {
   );
 
   return {
-    chatsData,
+    chatsData: chatsData || [],
     chatsError,
     chatsLoading,
   };

@@ -1,3 +1,5 @@
+type CHAT_ALREADY_EXIST_MSG = "There is a chat for this users";
+
 // Interface for the response when a chat is created or when sending a message
 interface ChatSchema {
   chat_id: string; // Unique identifier for the chat

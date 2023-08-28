@@ -12,7 +12,7 @@ const useGetUsers = () => {
   );
 
   return {
-    usersData,
+    usersData: usersData || [],
     usersError,
     usersLoading,
   };

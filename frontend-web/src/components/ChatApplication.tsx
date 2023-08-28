@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { List, Input, Button, Row, Col } from "antd";
+import { List, Input, Button, Row, Col, Spin, Typography, Space } from "antd";
 import useCreateChat from "@/api/hooks/useCreateChat";
 import { useAuth } from "@/lib/Authentication";
 
@@ -8,33 +8,14 @@ interface Message {
   text: string;
 }
 
-interface ChatContentProps {
-  selectedUser: User | null;
+export interface SelectedChat extends User, ChatSchema {}
+
+interface ChatApplicationProps {
+  selectedChat: SelectedChat | null;
+  chatCreationLoading: boolean;
 }
 
-const ChatContent: React.FC<ChatContentProps> = ({ selectedUser }) => {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [messageText, setMessageText] = useState("");
-  const {
-    authState: { username: currentUsername, id: currentId },
-  } = useAuth();
-  const { chatCreated, chatCreationLoading, createChat, errorCreatingChat } =
-    useCreateChat();
-
-  const handleSendMessage = () => {
-    setMessages([...messages, { sender: "You", text: messageText }]);
-    setMessageText("");
-  };
-
-  useEffect(() => {
-    if (selectedUser) {
-      createChat({
-        users_id: [currentId, String(selectedUser.id)],
-        users_name: [currentUsername, selectedUser.username],
-      });
-    }
-  }, [selectedUser]);
-
+const WrapperDiv = ({ children }: React.PropsWithChildren) => {
   return (
     <div
       style={{
@@ -45,7 +26,47 @@ const ChatContent: React.FC<ChatContentProps> = ({ selectedUser }) => {
         height: "100%",
       }}
     >
-      <h2>{selectedUser?.username}</h2>
+      {children}
+    </div>
+  );
+};
+
+const ChatApplication: React.FC<ChatApplicationProps> = ({
+  selectedChat,
+  chatCreationLoading,
+}) => {
+  const [messages, setMessages] = useState<Message[]>([]);
+
+  const [messageText, setMessageText] = useState("");
+
+  const handleSendMessage = () => {
+    setMessages([...messages, { sender: "You", text: messageText }]);
+    setMessageText("");
+  };
+
+  useEffect(() => {
+    if (selectedChat) {
+    }
+  }, [selectedChat]);
+
+  if (chatCreationLoading) {
+    return (
+      <WrapperDiv>
+        <Row style={{ margin: "auto", width: 350 }}>
+          <Col span={6}>
+            <Spin size="large" />
+          </Col>
+          <Col span={6}>
+            <Typography>Loading Chat</Typography>
+          </Col>
+        </Row>
+      </WrapperDiv>
+    );
+  }
+
+  return (
+    <WrapperDiv>
+      <h2>{selectedChat?.username}</h2>
       <List
         style={{
           display: "flex",
@@ -82,8 +103,8 @@ const ChatContent: React.FC<ChatContentProps> = ({ selectedUser }) => {
           </Button>
         </Col>
       </Row>
-    </div>
+    </WrapperDiv>
   );
 };
 
-export default ChatContent;
+export default ChatApplication;
