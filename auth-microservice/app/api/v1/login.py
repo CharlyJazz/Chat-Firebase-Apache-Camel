@@ -8,6 +8,8 @@ from app.schemas.token import AuthenticationSuccessResponse
 
 from typing import Annotated
 
+from typing import Annotated
+
 router = APIRouter(tags=["Login"])
 
 
