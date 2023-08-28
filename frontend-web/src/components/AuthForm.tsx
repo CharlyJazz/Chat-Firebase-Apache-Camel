@@ -4,12 +4,7 @@ import { Form, Input, Button, Typography } from "antd";
 export interface Props {
   title: string;
   submitButtonText: string;
-  onFinish: (args: AuthPayload) => void;
-}
-
-export interface AuthPayload {
-  username: string;
-  password: string;
+  onFinish: (args: CreateUserPayload) => void;
 }
 
 const AuthForm = ({ title, submitButtonText, onFinish }: Props) => {

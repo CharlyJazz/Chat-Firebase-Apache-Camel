@@ -40,7 +40,7 @@ async def create_chat(
         raise HTTPException(
             status_code=422, detail='There is a chat for this users'
         )
-    user_1_name, user_2_name = ['Pepe', 'Fefo'] # HOW
+    user_1_name, user_2_name = chat.users_name
     new_chat = Chat.create(
         chat_id = str(uuid.uuid4()),
         users_id = [user_1_id, user_2_id],

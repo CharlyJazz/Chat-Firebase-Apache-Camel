@@ -4,6 +4,7 @@ from uuid import UUID
 
 class ChatSentREST(BaseModel):
     users_id: List[str]
+    users_name: List[str]
         
     @validator('users_id')
     def users_id_uniques(cls, v):
@@ -15,10 +16,22 @@ class ChatSentREST(BaseModel):
         assert len(v) == 2, 'must has two values'
         return v
 
+    @validator('users_name')
+    def users_name_uniques(cls, v):
+        assert len(set(v)) == len(v), 'must be uniques values'
+        return v
+
+    @validator('users_name')
+    def users_name_length(cls, v):
+        assert len(v) == 2, 'must has two values'
+        return v
+
+
     class Config:
         schema_extra = {
             "example": {
-                "users_id": [1, 2]
+                "users_id": [1, 2],
+                "users_name": ['Bart', 'Pepe']
             }
         }
 
