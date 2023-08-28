@@ -39,7 +39,9 @@ const fetcher = async <T>(
   if (!response.ok) {
     const error = new Error("An error occurred while fetching the data.");
     // Attach extra info to the error object.
-    error.message = await response.json();
+    const errorResponse = (await response.json()) as { detail: string };
+    error.message =
+      errorResponse.detail || "There was a error without API standarization";
     error.name = `Status ${response.status}`;
     throw error;
   }

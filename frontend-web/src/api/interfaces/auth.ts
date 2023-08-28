@@ -3,6 +3,8 @@ interface CreateUserPayload {
   password: string;
 }
 
+interface LoginPayload extends CreateUserPayload {}
+
 interface AuthenticatedUserResponse {
   access_token: string;
   token_type: string;

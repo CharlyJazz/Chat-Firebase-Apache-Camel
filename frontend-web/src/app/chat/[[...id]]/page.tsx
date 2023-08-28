@@ -4,8 +4,17 @@ import useGetCurrentUserChats from "@/api/hooks/useGetCurrentUserChats";
 import useGetUsers from "@/api/hooks/useGetUsers";
 import ChatApplication, { SelectedChat } from "@/components/ChatApplication";
 import { useAuth } from "@/lib/Authentication";
-import { Avatar, Badge, Layout, Menu, Space, Spin, Typography } from "antd";
-import { useParams } from "next/navigation";
+import {
+  Avatar,
+  Badge,
+  Button,
+  Layout,
+  Menu,
+  Space,
+  Spin,
+  Typography,
+} from "antd";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const { Sider, Content } = Layout;
@@ -20,9 +29,12 @@ const ChatPage = () => {
   // Get parameters from URL
   const params = useParams() as { id?: string[] };
 
+  const route = useRouter();
+
   // Get authenticated user's information from Auth context
   const {
     authState: { username: currentUsername, id: currentUserId },
+    logout,
   } = useAuth();
 
   // Fetch users data
@@ -100,10 +112,10 @@ const ChatPage = () => {
     }
   }, [params.id, usersData, chatsData]);
 
-  // Render loading spinner if data is loading
-  if (usersLoading || chatsLoading) {
-    return <Spin />;
-  }
+  const handleLogout = () => {
+    logout();
+    route.replace("/");
+  };
 
   return (
     <>
@@ -111,11 +123,14 @@ const ChatPage = () => {
       <Layout style={{ minHeight: "97vh" }} hasSider>
         <Sider width={250} theme="light">
           {/* Sidebar menu */}
+          <Typography style={{ marginLeft: 25 }}>
+            Good day, {currentUsername}.
+          </Typography>
           <Menu
             mode="inline"
             defaultSelectedKeys={["1"]}
             style={{
-              height: "94vh",
+              height: "80vh",
               overflow: "auto",
               marginTop: "10px",
             }}
@@ -154,6 +169,13 @@ const ChatPage = () => {
               </Space>
             ) : null}
           </Menu>
+          <Button
+            onClick={handleLogout}
+            style={{ margin: "25px 0 0 25px" }}
+            type="dashed"
+          >
+            Logout
+          </Button>
         </Sider>
         <Content style={{ padding: "24px", background: "#f0f2f5" }}>
           {/* Display chat application or select user message */}

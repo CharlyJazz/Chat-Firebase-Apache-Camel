@@ -1,48 +1,45 @@
 "use client";
 
-import { message, Typography } from "antd";
+import { Alert, Divider, message, Spin, Typography } from "antd";
 import Link from "next/link";
 import styles from "./page.module.css";
 
-import AuthForm from "@/components/AuthForm";
-import { useRouter } from "next/navigation";
+import useLoginRequest from "@/api/hooks/useLoginRequest";
+import AuthForm from "@/components/AuthForm"; // Make sure to import the AuthPayload type
 import { useAuth } from "@/lib/Authentication";
-import { fetcher } from "@/lib/swr-fetcher";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 const Login = () => {
   const [messageApi, contextHolder] = message.useMessage();
 
   const route = useRouter();
 
-  const { login } = useAuth();
+  const { login, authState } = useAuth();
 
-  const handleLogin = async (args: CreateUserPayload) => {
-    try {
-      const data = await fetcher<AuthenticatedUserResponse>(
-        `${process.env.NEXT_PUBLIC_AUTH_MICROSERVICE}/api/v1/login`,
-        "POST",
-        {
-          username: args.username,
-          password: args.password,
-        },
-        {
-          "Content-Type": "application/x-www-form-urlencoded",
-        }
-      );
+  const { loginRequest, errorLogin, loadingLogin, authenticatedUserResponse } =
+    useLoginRequest();
 
-      if (data.detail) {
-        messageApi.info("Credentials are wrong", 3);
-      } else {
-        login(data);
-
-        messageApi.info("User authenticated", 2, () => {
-          route.replace("/chat");
-        });
-      }
-    } catch (error) {
-      messageApi.info("Error during login", 3);
-    }
+  const handleLogin = async (args: LoginPayload) => {
+    loginRequest({
+      username: args.username,
+      password: args.password,
+    });
   };
+
+  useEffect(() => {
+    if (!errorLogin && authenticatedUserResponse) {
+      login(authenticatedUserResponse);
+    }
+  }, [errorLogin, authenticatedUserResponse]);
+
+  useEffect(() => {
+    if (authState.access_token) {
+      messageApi.info(`Welcome ${authState.username}`, 3, () => {
+        route.replace("/chat");
+      });
+    }
+  }, [authState]);
 
   return (
     <div className={styles.Container}>
@@ -54,8 +51,20 @@ const Login = () => {
           onFinish={handleLogin}
         />
         <Link href="/create-account">
-          <Typography.Text>Create a account</Typography.Text>
+          <Typography.Text>Create an account</Typography.Text>
         </Link>
+        {loadingLogin && (
+          <>
+            <Divider />
+            <Spin />
+          </>
+        )}
+        {errorLogin && (
+          <>
+            <Divider />
+            <Alert message="Error" description={errorLogin} type="error" />
+          </>
+        )}
       </div>
     </div>
   );
