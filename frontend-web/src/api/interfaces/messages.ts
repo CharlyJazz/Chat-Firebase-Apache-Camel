@@ -21,7 +21,8 @@ interface MessageSchema {
   body: string;
   chat_id: string;
   time: string;
+  time_iso: string; // DateTime ISO Format
 }
 
 // Interface for the response when a message is created
-interface MessageCreatedResponse extends MessageSchema {}
+interface MessageSchema extends MessageSchema {}

@@ -1,9 +1,10 @@
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, root_validator, validator
 from datetime import datetime
 from app.core.config import settings
 from typing import Optional
 from uuid import UUID
 from app.models.chat_messages import ChatMessages
+
 
 class MessageSentREST(BaseModel):
     body: str
@@ -50,13 +51,31 @@ class GetMessageValidator(BaseModel):
             return False
         return len(ChatMessages.objects(chat_id=chat_id).filter(time=time)) == 0
 
-class MessageCreatedResponse(BaseModel):
+import datetime
+
+def uuid1_time_to_datetime(time:int):
+    """
+    Start datetime is on October 15th, 1582. 
+    WHY? https://en.wikipedia.org/wiki/1582
+    
+    add the time from uuid.uui1().time 
+    divided by 10 (ignoring the remainder thus //)
+    """
+    return datetime.datetime(1582, 10, 15) + datetime.timedelta(microseconds=time//10)
+
+class MessageSchema(BaseModel):
     message_id: UUID
     from_user: str
     to_user: str
     body: str
     chat_id: UUID
     time: UUID
+    time_iso: str
+
+    @root_validator(pre=True)
+    def create_time_iso(cls, values):
+        values["time_iso"] = uuid1_time_to_datetime(values["time"].time).isoformat()
+        return values
 
     class Config:
         schema_extra = {
@@ -66,6 +85,7 @@ class MessageCreatedResponse(BaseModel):
                 "to_user": "1",
                 "body": "Hello bro!",
                 "chat_id": "808a156a-672d-4604-ab3d-355bc3445e2e",
-                "time": "935b7ae6-afc1-11ec-b85d-b29c4ace6a4c"
+                "time": "935b7ae6-afc1-11ec-b85d-b29c4ace6a4c",
+                "time_iso": "2023-08-28T01:24:10.473126"
             }
         }

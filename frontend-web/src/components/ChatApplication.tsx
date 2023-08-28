@@ -1,40 +1,10 @@
-import React, { useEffect, useMemo, useState } from "react";
-import {
-  List,
-  Input,
-  Button,
-  Row,
-  Col,
-  Spin,
-  Typography,
-  Space,
-  Avatar,
-} from "antd";
-import useCreateChat from "@/api/hooks/useCreateChat";
-import { useAuth } from "@/lib/Authentication";
-import useSendMessage from "@/api/hooks/useSendMessage";
 import useGetChatMessages from "@/api/hooks/useGetChatMessages";
+import useSendMessage from "@/api/hooks/useSendMessage";
+import { useAuth } from "@/lib/Authentication";
+import { Avatar, Button, Col, Input, List, Row, Spin, Typography } from "antd";
+import React, { useEffect, useMemo, useState } from "react";
 
 export interface SelectedChat extends User, ChatSchema {}
-
-function uuidTimeToDate(uuid: string): Date {
-  const uuidBuffer = Buffer.from(uuid.replace(/-/g, ""), "hex");
-
-  // Extract the timestamp part of the UUID (first 8 bytes)
-  const timestampNanos =
-    uuidBuffer.readUInt32BE(0) * 2 ** 32 + uuidBuffer.readUInt32BE(4);
-
-  // Convert nanoseconds to milliseconds
-  const timestampMillis = timestampNanos / 10000;
-
-  // Calculate the base timestamp (1582-10-15 UTC) in milliseconds
-  const baseTimestamp = Date.UTC(1582, 9, 15);
-
-  // Calculate the final timestamp in milliseconds
-  const finalTimestamp = baseTimestamp + timestampMillis;
-
-  return new Date(finalTimestamp);
-}
 
 interface ChatApplicationProps {
   selectedChat: SelectedChat | null;
@@ -141,7 +111,7 @@ const ChatApplication: React.FC<ChatApplicationProps> = ({
         }}
         loading={messagesLoading}
         dataSource={dataSource}
-        renderItem={({ body, message_id, time }) => {
+        renderItem={({ body, message_id, time_iso }) => {
           return (
             <List.Item key={message_id}>
               <List.Item.Meta
@@ -151,7 +121,11 @@ const ChatApplication: React.FC<ChatApplicationProps> = ({
                 title={<Typography>{selectedChat!.username}</Typography>}
                 description={body}
               />
-              <div>{uuidTimeToDate(time).toDateString()}</div>
+              <div>
+                <Typography style={{ fontSize: "11px" }}>
+                  {new Date(time_iso).toLocaleTimeString()}
+                </Typography>
+              </div>
             </List.Item>
           );
         }}

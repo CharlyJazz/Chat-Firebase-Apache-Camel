@@ -2,7 +2,7 @@ import json
 
 from fastapi import APIRouter, Depends, HTTPException, status
 
-from app.schemas.message import MessageSentREST, MessageCreatedResponse
+from app.schemas.message import MessageSentREST, MessageSchema
 from app.core.config import settings
 from app.models.chat_messages import ChatMessages
 from app.models.chat import Chat
@@ -18,7 +18,7 @@ router = APIRouter(tags=["Messaging"])
 
 @router.post(
     "/messaging/",
-    response_model=MessageCreatedResponse,
+    response_model=MessageSchema,
     status_code=status.HTTP_201_CREATED,
     dependencies=[Depends(get_token_data)]
 )
@@ -51,7 +51,7 @@ async def create_message(
     await kafka_producer.send_and_wait("chat_messages", message.json().encode('utf-8'))
     try:
         record_created = ChatMessages.create(**message.__dict__)
-        return MessageCreatedResponse(**dict(record_created))
+        return MessageSchema(**dict(record_created))
     except BaseException:
         raise HTTPException(
             status_code=400, detail=settings.CASSANDRA_MESSAGE_CREATION_ERROR
