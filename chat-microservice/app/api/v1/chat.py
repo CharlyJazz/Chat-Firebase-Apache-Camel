@@ -2,7 +2,7 @@ import uuid
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from app.schemas.chat import ChatSentREST, ChatCreatedResponse
-from app.schemas.message import GetMessageValidator
+from app.schemas.message import GetMessageValidator, MessageSchema
 from app.core.config import settings
 from app.models.chat import Chat
 from app.models.chat_messages import ChatMessages
@@ -63,6 +63,7 @@ async def get_user_chats(current_user_id = Depends(get_current_user_id)):
 
 @router.get(
     "/chat/{chat_id}/messages/", 
+    response_model=list[MessageSchema],
     status_code=status.HTTP_200_OK,
     dependencies=[Depends(get_token_data)]
 )

@@ -21,7 +21,7 @@ const { Sider, Content } = Layout;
 
 const ChatPage = () => {
   // State to store selected friend's chat information
-  const [selectedFriend, setSelectedChat] = useState<SelectedChat | null>(null);
+  const [selectedChat, setSelectedChat] = useState<SelectedChat | null>(null);
 
   // State to track if parameter setup is finished
   const [finishedParamSetup, setFinishedParamSetup] = useState(false);
@@ -179,9 +179,9 @@ const ChatPage = () => {
         </Sider>
         <Content style={{ padding: "24px", background: "#f0f2f5" }}>
           {/* Display chat application or select user message */}
-          {selectedFriend ? (
+          {selectedChat ? (
             <ChatApplication
-              selectedChat={selectedFriend}
+              selectedChat={selectedChat}
               chatCreationLoading={chatCreationLoading}
             />
           ) : (

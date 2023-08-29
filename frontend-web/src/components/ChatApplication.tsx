@@ -1,12 +1,19 @@
-import React, { useEffect, useState } from "react";
-import { List, Input, Button, Row, Col, Spin, Typography, Space } from "antd";
-import useCreateChat from "@/api/hooks/useCreateChat";
+import useGetChatMessages from "@/api/hooks/useGetChatMessages";
+import useSendMessage from "@/api/hooks/useSendMessage";
 import { useAuth } from "@/lib/Authentication";
-
-interface Message {
-  sender: string;
-  text: string;
-}
+import {
+  Avatar,
+  Button,
+  Col,
+  Input,
+  List,
+  Row,
+  Skeleton,
+  Spin,
+  Typography,
+} from "antd";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 export interface SelectedChat extends User, ChatSchema {}
 
@@ -31,56 +38,153 @@ const WrapperDiv = ({ children }: React.PropsWithChildren) => {
   );
 };
 
+const LoadingChat = () => (
+  <WrapperDiv>
+    <Row style={{ margin: "auto", width: 350 }}>
+      <Col span={6}>
+        <Spin size="large" />
+      </Col>
+      <Col span={6}>
+        <Typography>Loading Chat</Typography>
+      </Col>
+    </Row>
+  </WrapperDiv>
+);
+
 const ChatApplication: React.FC<ChatApplicationProps> = ({
   selectedChat,
   chatCreationLoading,
 }) => {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const paginatingRef = useRef(false);
+  const scrollableDivRef = useRef<HTMLDivElement | null>(null);
+
+  const [messagesForUI, setMessagesForUI] = useState<MessageSchema[]>([]);
+
+  const { messageSent, sendMessage, sendMessageError, sendingMessage } =
+    useSendMessage();
+
+  const [paramsGetMessages, setParamsGetMessages] =
+    useState<GetMessageValidator>();
+
+  const { messagesData, messagesError, messagesLoading, mutate } =
+    useGetChatMessages(paramsGetMessages);
 
   const [messageText, setMessageText] = useState("");
 
+  const { authState } = useAuth();
+
   const handleSendMessage = () => {
-    setMessages([...messages, { sender: "You", text: messageText }]);
+    sendMessage(
+      {
+        body: messageText,
+        chat_id: selectedChat!.chat_id,
+        from_user: authState.id,
+        to_user: String(selectedChat!.id),
+      },
+      mutate
+    );
+
     setMessageText("");
   };
 
+  if (chatCreationLoading) {
+    return <LoadingChat />;
+  }
+
   useEffect(() => {
-    if (selectedChat) {
+    if (paginatingRef.current && !messagesError && messagesData.length) {
+      paginatingRef.current = false;
+      setMessagesForUI([...messagesForUI, ...messagesData]);
+    } else if (!messagesError && messagesData.length) {
+      setMessagesForUI(messagesData);
+    } else if (messagesError && messagesForUI.length > 0) {
+      setMessagesForUI([]);
+    }
+  }, [messagesData, messagesError]);
+
+  useEffect(() => {
+    if (selectedChat && paramsGetMessages?.chat_id !== selectedChat!.chat_id) {
+      paginatingRef.current = false;
+      setParamsGetMessages({
+        chat_id: selectedChat!.chat_id,
+        quantity: 10,
+        time: undefined,
+      });
     }
   }, [selectedChat]);
 
-  if (chatCreationLoading) {
-    return (
-      <WrapperDiv>
-        <Row style={{ margin: "auto", width: 350 }}>
-          <Col span={6}>
-            <Spin size="large" />
-          </Col>
-          <Col span={6}>
-            <Typography>Loading Chat</Typography>
-          </Col>
-        </Row>
-      </WrapperDiv>
-    );
-  }
+  const dataSource = useMemo(() => {
+    return messagesForUI.slice().reverse();
+  }, [messagesForUI]);
+
+  const fetchMoreData = () => {
+    if (paginatingRef.current || !messagesForUI.length) return;
+
+    paginatingRef.current = true;
+    const oldestMessageTime = messagesForUI[messagesForUI.length - 1].time;
+    setParamsGetMessages({
+      chat_id: selectedChat!.chat_id,
+      quantity: 10,
+      time: oldestMessageTime,
+    });
+  };
+
+  const hasMore = messagesError
+    ? false
+    : paginatingRef.current === true
+    ? false
+    : messagesForUI.length >= 10;
 
   return (
     <WrapperDiv>
       <h2>{selectedChat?.username}</h2>
-      <List
+
+      <div
+        ref={scrollableDivRef}
+        id="scrollableDiv"
         style={{
           display: "flex",
           flexDirection: "column-reverse",
-          height: "70vh",
-          overflowY: "scroll",
+          height: "550px",
+          overflow: "auto",
         }}
-        dataSource={messages}
-        renderItem={(item) => (
-          <List.Item>
-            <div>{`${item.sender}: ${item.text}`}</div>
-          </List.Item>
-        )}
-      />
+      >
+        <InfiniteScroll
+          dataLength={dataSource.length}
+          next={fetchMoreData}
+          style={{ display: "flex", flexDirection: "column-reverse" }}
+          inverse={true}
+          hasMore={messagesError ? false : hasMore}
+          loader={<Skeleton paragraph={{ rows: 1 }} active />}
+          scrollableTarget="scrollableDiv"
+        >
+          <List
+            dataSource={dataSource}
+            locale={{ emptyText: "There is not messages in this chat :(" }}
+            renderItem={({ body, message_id, time_iso }) => {
+              return (
+                <List.Item key={message_id}>
+                  <List.Item.Meta
+                    avatar={
+                      <Avatar size={"small"}>
+                        {selectedChat!.username[0]}
+                      </Avatar>
+                    }
+                    title={<Typography>{selectedChat!.username}</Typography>}
+                    description={body}
+                  />
+                  <div>
+                    <Typography style={{ fontSize: "11px" }}>
+                      {new Date(time_iso).toLocaleTimeString()}
+                    </Typography>
+                  </div>
+                </List.Item>
+              );
+            }}
+          />
+        </InfiniteScroll>
+      </div>
+
       <Row>
         <Col span={20}>
           <Input
