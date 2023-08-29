@@ -1,8 +1,19 @@
 import useGetChatMessages from "@/api/hooks/useGetChatMessages";
 import useSendMessage from "@/api/hooks/useSendMessage";
 import { useAuth } from "@/lib/Authentication";
-import { Avatar, Button, Col, Input, List, Row, Spin, Typography } from "antd";
-import React, { useEffect, useMemo, useState } from "react";
+import {
+  Avatar,
+  Button,
+  Col,
+  Input,
+  List,
+  Row,
+  Skeleton,
+  Spin,
+  Typography,
+} from "antd";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 export interface SelectedChat extends User, ChatSchema {}
 
@@ -44,6 +55,9 @@ const ChatApplication: React.FC<ChatApplicationProps> = ({
   selectedChat,
   chatCreationLoading,
 }) => {
+  const paginatingRef = useRef(false);
+  const scrollableDivRef = useRef<HTMLDivElement | null>(null);
+
   const [messagesForUI, setMessagesForUI] = useState<MessageSchema[]>([]);
 
   const { messageSent, sendMessage, sendMessageError, sendingMessage } =
@@ -78,7 +92,10 @@ const ChatApplication: React.FC<ChatApplicationProps> = ({
   }
 
   useEffect(() => {
-    if (!messagesError && messagesData.length) {
+    if (paginatingRef.current && !messagesError && messagesData.length) {
+      paginatingRef.current = false;
+      setMessagesForUI([...messagesForUI, ...messagesData]);
+    } else if (!messagesError && messagesData.length) {
       setMessagesForUI(messagesData);
     } else if (messagesError && messagesForUI.length > 0) {
       setMessagesForUI([]);
@@ -87,9 +104,10 @@ const ChatApplication: React.FC<ChatApplicationProps> = ({
 
   useEffect(() => {
     if (selectedChat && paramsGetMessages?.chat_id !== selectedChat!.chat_id) {
+      paginatingRef.current = false;
       setParamsGetMessages({
         chat_id: selectedChat!.chat_id,
-        quantity: 20,
+        quantity: 10,
         time: undefined,
       });
     }
@@ -99,37 +117,74 @@ const ChatApplication: React.FC<ChatApplicationProps> = ({
     return messagesForUI.slice().reverse();
   }, [messagesForUI]);
 
+  const fetchMoreData = () => {
+    if (paginatingRef.current || !messagesForUI.length) return;
+
+    paginatingRef.current = true;
+    const oldestMessageTime = messagesForUI[messagesForUI.length - 1].time;
+    setParamsGetMessages({
+      chat_id: selectedChat!.chat_id,
+      quantity: 10,
+      time: oldestMessageTime,
+    });
+  };
+
+  const hasMore = messagesError
+    ? false
+    : paginatingRef.current === true
+    ? false
+    : messagesForUI.length >= 10;
+
   return (
     <WrapperDiv>
       <h2>{selectedChat?.username}</h2>
-      <List
+
+      <div
+        ref={scrollableDivRef}
+        id="scrollableDiv"
         style={{
           display: "flex",
           flexDirection: "column-reverse",
-          height: "70vh",
-          overflowY: "scroll",
+          height: "550px",
+          overflow: "auto",
         }}
-        loading={messagesLoading}
-        dataSource={dataSource}
-        renderItem={({ body, message_id, time_iso }) => {
-          return (
-            <List.Item key={message_id}>
-              <List.Item.Meta
-                avatar={
-                  <Avatar size={"small"}>{selectedChat!.username[0]}</Avatar>
-                }
-                title={<Typography>{selectedChat!.username}</Typography>}
-                description={body}
-              />
-              <div>
-                <Typography style={{ fontSize: "11px" }}>
-                  {new Date(time_iso).toLocaleTimeString()}
-                </Typography>
-              </div>
-            </List.Item>
-          );
-        }}
-      />
+      >
+        <InfiniteScroll
+          dataLength={dataSource.length}
+          next={fetchMoreData}
+          style={{ display: "flex", flexDirection: "column-reverse" }}
+          inverse={true}
+          hasMore={messagesError ? false : hasMore}
+          loader={<Skeleton paragraph={{ rows: 1 }} active />}
+          scrollableTarget="scrollableDiv"
+        >
+          <List
+            dataSource={dataSource}
+            locale={{ emptyText: "There is not messages in this chat :(" }}
+            renderItem={({ body, message_id, time_iso }) => {
+              return (
+                <List.Item key={message_id}>
+                  <List.Item.Meta
+                    avatar={
+                      <Avatar size={"small"}>
+                        {selectedChat!.username[0]}
+                      </Avatar>
+                    }
+                    title={<Typography>{selectedChat!.username}</Typography>}
+                    description={body}
+                  />
+                  <div>
+                    <Typography style={{ fontSize: "11px" }}>
+                      {new Date(time_iso).toLocaleTimeString()}
+                    </Typography>
+                  </div>
+                </List.Item>
+              );
+            }}
+          />
+        </InfiniteScroll>
+      </div>
+
       <Row>
         <Col span={20}>
           <Input
