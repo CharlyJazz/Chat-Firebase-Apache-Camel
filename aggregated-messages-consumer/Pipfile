@@ -8,6 +8,12 @@ kafka-python = "*"
 firebase-admin = "*"
 
 [dev-packages]
+pytest = "*"
 
 [requires]
 python_version = "3.10.6"
+
+[scripts]
+tests="pytest -rP"
+consumer="python run.py"
+send_chats="python manual_testing/kafka_producer_single_messages.py"
