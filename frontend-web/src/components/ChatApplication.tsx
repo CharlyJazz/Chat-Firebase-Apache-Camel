@@ -154,7 +154,7 @@ const ChatApplication: React.FC<ChatApplicationProps> = ({
           next={fetchMoreData}
           style={{ display: "flex", flexDirection: "column-reverse" }}
           inverse={true}
-          hasMore={hasMore}
+          hasMore={hasMore} 
           loader={<Skeleton paragraph={{ rows: 1 }} active />}
           scrollableTarget="scrollableDiv"
         >
