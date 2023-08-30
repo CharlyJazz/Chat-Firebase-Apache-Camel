@@ -8,6 +8,11 @@ kafka-python = "*"
 firebase-admin = "*"
 
 [dev-packages]
+pytest = "*"
 
 [requires]
 python_version = "3.10.6"
+
+[scripts]
+tests="pytest -rP"
+run="python run.py"

@@ -31,3 +31,5 @@ aggregated-messages-consumer/service_account_key.json
 
 .settings/org.eclipse.core.resources.prefs
 .vscode
+
+*/.pytest_cache
