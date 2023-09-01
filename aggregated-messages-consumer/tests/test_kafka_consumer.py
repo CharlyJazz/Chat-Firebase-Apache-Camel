@@ -8,13 +8,49 @@ from kafka import KafkaProducer
 from kafka_consumer import KafkaMessageConsumer
 from datetime import datetime
 
+from kafka import KafkaAdminClient
+
+TEST_ID = "TEST_KAFKA_CONSUMER"
+TOPIC_NAME = 'chat_messages_grouped'
+
+MESSAGE = {
+    "test_id": TEST_ID,
+    "from_user": "charlyjazz",
+    "chat_id": "1",
+    "time_iso": "N/A",
+    "list_of_messages": [
+        {
+            "body": "Hello",
+            "message_id": "1",
+            "chat_id": "1",
+            "time": "uuid",
+            "time_iso": "N/A",
+            "to_user": "Pepito"
+        },
+        {
+            "body": "How are your mom?",
+            "message_id": "3",
+            "chat_id": "1",
+            "time": "uuid",
+            "time_iso": "N/A",
+            "to_user": "Pepito"
+        },
+        {
+            "body": "Wow",
+            "message_id": "3",
+            "chat_id": "1",
+            "time": "uuid",
+            "time_iso": "N/A",
+            "to_user": "Pepito"
+        }
+    ]
+}
+
 @pytest.fixture(scope='module')
 def kafka_producer():
     producer = KafkaProducer(bootstrap_servers=['localhost:9092'])
     yield producer
     producer.close()
-
-TOPIC_NAME = 'chat_messages_grouped'
 
 @pytest.fixture(scope='module')
 def kafka_consumer():
@@ -29,53 +65,24 @@ def kafka_consumer():
     )
     yield consumer
 
-def test_integration(kafka_producer, kafka_consumer):
-    MESSAGE = {
-        "from_user": "charlyjazz",
-        "chat_id": "1",
-        "time_iso": str(datetime.today()),
-        "list_of_messages": [
-            {
-                "body": "Hello",
-                "message_id": "1",
-                "chat_id": "1",
-                "time": "uuid",
-                "time_iso": str(datetime.today()),
-                "to_user": "Pepito"
-            },
-            {
-                "body": "How are your mom?",
-                "message_id": "3",
-                "chat_id": "1",
-                "time": "uuid",
-                "time_iso": str(datetime.today()),
-                "to_user": "Pepito"
-            },
-            {
-                "body": "Wow",
-                "message_id": "3",
-                "chat_id": "1",
-                "time": "uuid",
-                "time_iso": str(datetime.today()),
-                "to_user": "Pepito"
-            }
-        ]
-    }
+@pytest.fixture(scope='module')
+def firestore_query(kafka_consumer):
+    return kafka_consumer.db.collection(u'messages').where('test_id', '==', TEST_ID).limit(1).get
 
-    kafka_consumer_thread = threading.Thread(target=kafka_consumer.consume_messages)
-    kafka_consumer_thread.start()
-
-    time.sleep(20)
-
-    kafka_consumer_thread.join(timeout=0)
-
+def test_integration(kafka_producer, kafka_consumer, firestore_query):
     kafka_producer.send(TOPIC_NAME, json.dumps(MESSAGE).encode('utf-8'))
     kafka_producer.flush()
+    kafka_consumer_thread = threading.Thread(target=kafka_consumer.consume_messages)
+    kafka_consumer_thread.start()
+    kafka_consumer_thread.join(timeout=5)
+    query = firestore_query()
+    retry_count = 1
 
-    time.sleep(20)
-
-    query = kafka_consumer.db.collection(u'messages').where('time_iso', '==', MESSAGE['time_iso']).limit(1).get()
-    assert len(query) == 1
+    while len(query) == 0:
+        print("Waiting {} seconds".format(retry_count))
+        time.sleep(retry_count)
+        retry_count += retry_count
+        query = firestore_query()
 
     # Get the data from the query result
     stored_message = query[0].to_dict()
