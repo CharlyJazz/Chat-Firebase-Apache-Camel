@@ -1,5 +1,5 @@
 from kafka import KafkaClient, errors
-from kafka_consumer import KafkaMessageConsumer
+from kafka_consumer import KafkaMessageConsumer, BOOSTRAP_SERVER
 import json
 import logging
 import firebase_admin
@@ -11,8 +11,8 @@ def check_kafka_availability(timeout_seconds=120):
     
     while time.time() - start_time < timeout_seconds:
         try:
-            client = KafkaClient(bootstrap_servers='localhost:9092')
-            logging.info("Kafka Client Successfully Connected")
+            client = KafkaClient(bootstrap_servers=BOOSTRAP_SERVER)
+            logging.warning("Kafka Client Successfully Connected")
             client.close()
             return True
         except errors.NoBrokersAvailable:

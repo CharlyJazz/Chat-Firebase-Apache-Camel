@@ -5,6 +5,9 @@ import firebase_admin
 from firebase_admin import credentials, firestore
 from typing import Any, Dict
 
+# For Docker Composer kafka:9092 but for local is 29092
+BOOSTRAP_SERVER = os.getenv("BOOSTRAP_SERVER", 'kafka:9092')
+
 class KafkaMessageConsumer:
     def __init__(self, topic_name: str, group_id: str, firebase_cred_path: str, test_mode=False) -> None:
         self.topic_name = topic_name
@@ -13,7 +16,7 @@ class KafkaMessageConsumer:
         self.test_mode = test_mode
         self.consumer = KafkaConsumer(
             self.topic_name,
-            bootstrap_servers='localhost:9092',
+            bootstrap_servers=BOOSTRAP_SERVER,
             auto_offset_reset='latest',
             group_id=self.group_id,
             value_deserializer=lambda m: json.loads(m.decode('utf-8'))
