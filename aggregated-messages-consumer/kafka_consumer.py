@@ -13,12 +13,13 @@ class KafkaMessageConsumer:
         self.test_mode = test_mode
         self.consumer = KafkaConsumer(
             self.topic_name,
+            bootstrap_servers='localhost:9092',
             auto_offset_reset='latest',
             group_id=self.group_id,
             value_deserializer=lambda m: json.loads(m.decode('utf-8'))
         )
         logging.basicConfig(
-            level=logging.INFO,
+            level=logging.DEBUG,
             filename='consumer.log',
             filemode='w',
             format='%(name)s - %(levelname)s - %(message)s'

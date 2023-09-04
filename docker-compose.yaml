@@ -37,6 +37,13 @@ services:
       POSTGRES_PASSWORD: auth_microservice
     ports:
       - '5433:5432'
+  # consumer:
+  #   build:
+  #     context: aggregated-messages-consumer
+  #     dockerfile: ./Dockerfile
+  #   depends_on:
+  #     - kafka
+
 volumes:
   zookeeper_data:
     driver: local
@@ -46,22 +53,3 @@ volumes:
     driver: local
   messaging_db_volume:
     driver: local
-
-# https://hub.docker.com/r/bitnami/kafka/
-# https://github.com/wurstmeister/kafka-docker/issues/389#issuecomment-416884988
-
-# docker-compose rm -svf && docker-compose up
-
-
-# https://citizix.com/how-to-run-cassandra-4-with-docker-and-docker-compose/
-
-
-# docker run -d \
-#     --name my-cassandra \
-#     -p 9042:9042 \
-#     -v ~/apps/cassandra:/var/lib/cassandra \
-#     -e CASSANDRA_CLUSTER_NAME=citizix \
-#     cassandra:4.0
-
-
-# docker exec -it book-cassandra cqlsh
