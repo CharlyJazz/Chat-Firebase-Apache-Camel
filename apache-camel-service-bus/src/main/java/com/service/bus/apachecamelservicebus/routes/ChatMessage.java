@@ -6,13 +6,14 @@ public class ChatMessage {
 	private String chat_id;
 	private String body;
 	private String time;
+	private String time_iso;
 	private String message_id;
 	
 	public ChatMessage() {
 		
 	}
 	
-	public ChatMessage(String from_user, String body, String to_user, String chat_id, String time, String message_id) {
+	public ChatMessage(String from_user, String body, String to_user, String chat_id, String time, String message_id, String time_iso) {
 		super();
 		this.chat_id = chat_id;
 		this.from_user = from_user;
@@ -20,6 +21,7 @@ public class ChatMessage {
 		this.message_id = message_id;
 		this.body = body;
 		this.time = time;
+		this.time_iso = time_iso;
 	}
 
 	public String getFrom_user() {
@@ -68,5 +70,13 @@ public class ChatMessage {
 
 	public void setMessage_id(String message_id) {
 		this.message_id = message_id;
+	}
+
+	public String getTime_iso() {
+		return time_iso;
+	}
+
+	public void setTime_iso(String time_iso) {
+		this.time_iso = time_iso;
 	}
 }

@@ -1,9 +1,12 @@
 from kafka import KafkaConsumer
+from firebase_admin import credentials, firestore
+from typing import Any, Dict
+
 import json
 import logging
 import firebase_admin
-from firebase_admin import credentials, firestore
-from typing import Any, Dict
+import os
+
 
 # For Docker Composer kafka:9092 but for local is 29092
 BOOSTRAP_SERVER = os.getenv("BOOSTRAP_SERVER", 'kafka:9092')

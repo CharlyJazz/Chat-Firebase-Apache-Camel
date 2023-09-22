@@ -1,6 +1,7 @@
 import json
 
 from fastapi import APIRouter, Depends, HTTPException, status
+from uuid import UUID
 
 from app.schemas.message import MessageSentREST, MessageSchema
 from app.core.config import settings
@@ -13,6 +14,12 @@ from ..deps import (
     get_logging_event
 )
 
+
+class UUIDEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, UUID):
+            return str(obj)
+        return super().default(obj)
 
 router = APIRouter(tags=["Messaging"])
 
@@ -47,12 +54,15 @@ async def create_message(
         raise HTTPException(
             status_code=401, detail=settings.CASSANDRA_MESSAGE_CREATION_UNAUTHORIZED
         )
-    Logging.info('Kafka Producer Initialized')
-    await kafka_producer.send_and_wait("chat_messages", message.json().encode('utf-8'))
     try:
         record_created = ChatMessages.create(**message.__dict__)
-        return MessageSchema(**dict(record_created))
-    except BaseException:
+        schema = MessageSchema(**dict(record_created))
+        json_dump = json.dumps(dict(schema), cls=UUIDEncoder).encode('utf-8')
+        Logging.info('Message created {}'.format(json_dump))
+        await kafka_producer.send_and_wait("chat_messages", json_dump)
+        return schema
+    except BaseException as e:
+        Logging.error(f"An error occurred: {str(e)}")  # Log the error message
         raise HTTPException(
             status_code=400, detail=settings.CASSANDRA_MESSAGE_CREATION_ERROR
         )

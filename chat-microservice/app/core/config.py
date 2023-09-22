@@ -24,7 +24,7 @@ class Settings(BaseSettings):
     CASSANDRA_KEYSPACE_TESTING: str = 'python_test_environment'
     MAX_MESSAGES_QUANTITY_PAGINATION = 20
     logging.basicConfig(filename="logs.txt", filemode='a', format='%(asctime)s %(levelname)s-%(message)s', datefmt='%Y-%m-%d %H:%M:%S')
-    logging.getLogger().setLevel(logging.INFO)
+    logging.getLogger().setLevel(logging.DEBUG)
 
     class Config:
         # Relative to main.py
