@@ -34,6 +34,10 @@ This solution will be
 
 ![Architecture diagram](https://user-images.githubusercontent.com/12489333/166072172-482250b2-93f7-4787-9652-3826054cc817.png)
 
+This is how it looks like in Firestore:
+
+![Firestore Image of the messages](https://user-images.githubusercontent.com/12489333/269821581-987ba838-92c0-493a-bc08-5352205597cf.png)
+
 **Advantages of this approach?**
 
 None, I mean this is only for learn purposes and Apache Camel and microservices.
