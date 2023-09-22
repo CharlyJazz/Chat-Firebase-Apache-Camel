@@ -11,7 +11,7 @@ We need a Chat App between two users but dont want save all the message in Fires
 1. Create User
 2. Login
 3. Get the list of users
-4. User send messages to other user 
+4. User send messages to other user
 5. Create a new chat room between to users: The user A will find the user B and start a chat.
 6. User get realtime message updating
 
@@ -28,15 +28,15 @@ We need a Chat App between two users but dont want save all the message in Fires
 
 Instead of use Firestore or another cloud based solution for a full chat solution we going to use Firestore only to show the news messages aggregated.
 
-A "new message aggregated" is a set of messages sent by a user, instead of show each message one by one there 
+A "new message aggregated" is a set of messages sent by a user, instead of show each message one by one there
 will be a server that going to group all the related messages sent by a user to a chat in a list. And that list will be retrieve to the chat.
-This solution will be 
+This solution will be
 
 ![Architecture diagram](https://user-images.githubusercontent.com/12489333/166072172-482250b2-93f7-4787-9652-3826054cc817.png)
 
 **Advantages of this approach?**
 
-None, I mean this is only for learn purposes and Apache Camel and microservices. 
+None, I mean this is only for learn purposes and Apache Camel and microservices.
 I couldn't think of any other use for apache camel, the only use was to add chat messages
 
 ## Architectural Components to explicit implementation details
@@ -70,6 +70,25 @@ Java(TM) SE Runtime Environment (build 17.0.2+8-LTS-86)
 Java HotSpot(TM) 64-Bit Server VM (build 17.0.2+8-LTS-86, mixed mode, sharing)
 ```
 
+## How to run the microservices manually?
+
+- Chat Microservice:
+
+```bash
+cd chat-microservice && pipenv run server
+```
+
+- Auth Microservice:
+
+```bash
+cd auth-microservice && pipenv run server
+```
+
+- You will need Maven to run the Apache Camel Spring Boot server
+
+```bash
+cd apache-camel-service-bus && mvn package && mvn spring-boot:run
+```
 
 ## Docker Development Worflow
 
@@ -82,17 +101,20 @@ docker-compose rm -svf && docker-compose up
 ### Run Kafka CLI:
 
 Create a topic:
-``` bash
+
+```bash
 docker exec -it CONTAINER_ID kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 3 --topic charlytest
 ```
 
 List of topics:
-``` bash
+
+```bash
 docker exec -it CONTAINER_ID kafka-topics.sh --bootstrap-server localhost:9092 --list
 ```
 
 Get topics information
-``` bash
+
+```bash
 docker exec -it CONTAINER_ID kafka-topics.sh --bootstrap-server localhost:9092 --describe
 ```
 
@@ -112,9 +134,7 @@ docker exec -it CONTAINER_ID kafka-console-producer.sh  --bootstrap-server local
 docker exec -it CONTAINER_ID cqlsh
 ```
 
-
 ### Get the network information
-
 
 ```bash
 docker network ls | grep "camel"
