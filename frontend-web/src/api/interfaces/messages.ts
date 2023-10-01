@@ -24,5 +24,9 @@ interface MessageSchema {
   time_iso: string; // DateTime ISO Format
 }
 
-// Interface for the response when a message is created
-interface MessageSchema extends MessageSchema {}
+interface FirestoreNewMessageContract {
+  chat_id: string;
+  from_user: string;
+  latest_message_time_iso: string;
+  list_of_messages: MessageSchema[];
+}

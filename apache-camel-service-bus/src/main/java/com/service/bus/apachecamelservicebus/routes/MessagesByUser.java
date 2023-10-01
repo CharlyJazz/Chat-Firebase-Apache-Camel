@@ -5,8 +5,8 @@ import java.util.ArrayList;
 public class MessagesByUser {
 	private String from_user;
 	private String chat_id;
-
 	private ArrayList<ChatMessage> list_of_messages;
+	private String latest_message_time_iso;
 	
 	public MessagesByUser() {
 		
@@ -18,6 +18,7 @@ public class MessagesByUser {
 		this.chat_id = chat_id;
 		this.list_of_messages = new ArrayList<ChatMessage>();
 		this.list_of_messages.add(first_message);
+		this.latest_message_time_iso = first_message.getTime_iso();
 	}
 	
 	public void addMessage(ChatMessage message) {
@@ -46,5 +47,12 @@ public class MessagesByUser {
 
 	public void setChat_id(String chat_id) {
 		this.chat_id = chat_id;
+	}
+
+	public String getLatest_message_time_iso() {
+		return this.latest_message_time_iso;
+	}
+	public void setLatest_message_time_iso(String latest_message_time_iso) {
+		this.latest_message_time_iso = latest_message_time_iso;
 	}
 }

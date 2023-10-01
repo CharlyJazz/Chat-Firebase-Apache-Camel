@@ -12,8 +12,10 @@ import {
   Spin,
   Typography,
 } from "antd";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { db } from "../firebase/firebaseConfig";
 
 export interface SelectedChat extends User, ChatSchema {}
 
@@ -79,7 +81,7 @@ const ChatApplication: React.FC<ChatApplicationProps> = ({
         body: messageText,
         chat_id: selectedChat!.chat_id,
         from_user: authState.id,
-        to_user: String(selectedChat!.id),
+        to_user: String(selectedChat!.id), // What?
       },
       mutate
     );
@@ -90,6 +92,34 @@ const ChatApplication: React.FC<ChatApplicationProps> = ({
   if (chatCreationLoading) {
     return <LoadingChat />;
   }
+
+  useEffect(() => {
+    if (selectedChat) {
+      const q = query(
+        collection(db, "messages"),
+        where("chat_id", "==", selectedChat.chat_id),
+        where("from_user", "==", String(selectedChat.id))
+        // 1.) This will fix that currently we are getting all the messages related to the chat
+        // 2.) I need to update the Java Server
+        // where("latest_message_time_iso", "==", String(latestMessageTimeISO)),
+      );
+
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        querySnapshot.docChanges().forEach((change) => {
+          if (change.type === "added") {
+            const docData = change.doc.data() as FirestoreNewMessageContract;
+            if (docData.list_of_messages && docData.list_of_messages.length) {
+              // setMessagesForUI([...messagesForUI, ...docData.list_of_messages]);
+            }
+          }
+        });
+      });
+
+      return () => {
+        unsubscribe();
+      };
+    }
+  }, [selectedChat]);
 
   useEffect(() => {
     if (paginatingRef.current && !messagesError && messagesData.length) {
@@ -154,7 +184,7 @@ const ChatApplication: React.FC<ChatApplicationProps> = ({
           next={fetchMoreData}
           style={{ display: "flex", flexDirection: "column-reverse" }}
           inverse={true}
-          hasMore={hasMore} 
+          hasMore={hasMore}
           loader={<Skeleton paragraph={{ rows: 1 }} active />}
           scrollableTarget="scrollableDiv"
         >

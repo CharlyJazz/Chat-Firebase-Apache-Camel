@@ -74,6 +74,12 @@ Java(TM) SE Runtime Environment (build 17.0.2+8-LTS-86)
 Java HotSpot(TM) 64-Bit Server VM (build 17.0.2+8-LTS-86, mixed mode, sharing)
 ```
 
+## Run tests in Apache Camel
+
+```bash
+mvn test -X
+```
+
 ## How to run the microservices manually?
 
 - Chat Microservice:

@@ -22,23 +22,23 @@ public class ChatMessagesRouterJUnitTest extends CamelTestSupport {
     @Test
     public void testMock() throws Exception {
 
-        template.sendBody("direct:chat_messages", "{\"from_user\": 1, \"to_user\": 2, \"body\": \"Hell 1 1th Group\", \"chat_id\": 1}");
-        template.sendBody("direct:chat_messages", "{\"from_user\": 1, \"to_user\": 2, \"body\": \"Hell 2 1th Group\", \"chat_id\": 1}");
-        template.sendBody("direct:chat_messages", "{\"from_user\": 1, \"to_user\": 2, \"body\": \"Hell 3 1th Group\", \"chat_id\": 1}");
+        template.sendBody("direct:chat_messages", "{\"from_user\": 1, \"to_user\": 2, \"body\": \"Hell 1 1th Group\", \"chat_id\": 1, \"time_iso\": \"2023-10-01T21:17:12.074622\"}");
+        template.sendBody("direct:chat_messages", "{\"from_user\": 1, \"to_user\": 2, \"body\": \"Hell 2 1th Group\", \"chat_id\": 1, \"time_iso\": \"2023-10-02T21:17:12.074622\"}");
+        template.sendBody("direct:chat_messages", "{\"from_user\": 1, \"to_user\": 2, \"body\": \"Hell 3 1th Group\", \"chat_id\": 1, \"time_iso\": \"2023-10-03T21:17:12.074622\"}");
 
-        template.sendBody("direct:chat_messages", "{\"from_user\": 2, \"to_user\": 2, \"body\": \"Hell 1 2th Group\", \"chat_id\": 1}");
-        template.sendBody("direct:chat_messages", "{\"from_user\": 2, \"to_user\": 2, \"body\": \"Hell 2 2th Group\", \"chat_id\": 1}");
+        template.sendBody("direct:chat_messages", "{\"from_user\": 2, \"to_user\": 2, \"body\": \"Hell 1 2th Group\", \"chat_id\": 1, \"time_iso\": \"2023-10-01T21:17:12.074622\"}");
+        template.sendBody("direct:chat_messages", "{\"from_user\": 2, \"to_user\": 2, \"body\": \"Hell 2 2th Group\", \"chat_id\": 1, \"time_iso\": \"2023-10-09T21:17:12.074622\"}");
         
-        template.sendBody("direct:chat_messages", "{\"from_user\": 3, \"to_user\": 2, \"body\": \"Hell 1 3th Group\", \"chat_id\": 1}");
-        template.sendBody("direct:chat_messages", "{\"from_user\": 3, \"to_user\": 2, \"body\": \"Hell 2 3th Group\", \"chat_id\": 1}");
-        template.sendBody("direct:chat_messages", "{\"from_user\": 3, \"to_user\": 2, \"body\": \"Hell 3 3th Group\", \"chat_id\": 1}");
-        template.sendBody("direct:chat_messages", "{\"from_user\": 3, \"to_user\": 2, \"body\": \"Hell 4 3th Group\", \"chat_id\": 1}");
-        template.sendBody("direct:chat_messages", "{\"from_user\": 3, \"to_user\": 2, \"body\": \"Hell 5 3th Group\", \"chat_id\": 1}");
+        template.sendBody("direct:chat_messages", "{\"from_user\": 3, \"to_user\": 2, \"body\": \"Hell 1 3th Group\", \"chat_id\": 1, \"time_iso\": \"2023-10-01T21:17:12.074622\"}");
+        template.sendBody("direct:chat_messages", "{\"from_user\": 3, \"to_user\": 2, \"body\": \"Hell 2 3th Group\", \"chat_id\": 1, \"time_iso\": \"2023-10-22T21:17:12.074622\"}");
+        template.sendBody("direct:chat_messages", "{\"from_user\": 3, \"to_user\": 2, \"body\": \"Hell 3 3th Group\", \"chat_id\": 1, \"time_iso\": \"2023-10-20T21:17:12.074622\"}");
+        template.sendBody("direct:chat_messages", "{\"from_user\": 3, \"to_user\": 2, \"body\": \"Hell 4 3th Group\", \"chat_id\": 1, \"time_iso\": \"2023-10-01T21:17:12.074622\"}");
+        template.sendBody("direct:chat_messages", "{\"from_user\": 3, \"to_user\": 2, \"body\": \"Hell 5 3th Group\", \"chat_id\": 1, \"time_iso\": \"2023-10-01T21:17:12.074622\"}");
 
         
         MockEndpoint mock = getMockEndpoint("mock:chat_messages_grouped");
 
-        mock.expectedMessageCount(3);
+        mock.expectedMessageCount(1);
         
         assertMockEndpointsSatisfied();
                 
@@ -49,6 +49,7 @@ public class ChatMessagesRouterJUnitTest extends CamelTestSupport {
         assertEquals("Hell 1 1th Group", messages1.getList_of_messages().get(0).getBody());
         assertEquals("Hell 2 1th Group", messages1.getList_of_messages().get(1).getBody());
         assertEquals("Hell 3 1th Group", messages1.getList_of_messages().get(2).getBody());
+        assertEquals("2023-10-03T21:17:12.074622", messages1.getLatest_message_time_iso());
         
         Exchange group_2 = mock.getExchanges().get(1);
         
@@ -56,6 +57,7 @@ public class ChatMessagesRouterJUnitTest extends CamelTestSupport {
         
         assertEquals("Hell 1 2th Group", messages2.getList_of_messages().get(0).getBody());
         assertEquals("Hell 2 2th Group", messages2.getList_of_messages().get(1).getBody());
+        assertEquals("2023-10-09T21:17:12.074622", messages2.getLatest_message_time_iso());
         
         Exchange group_3 = mock.getExchanges().get(2);
         
@@ -67,6 +69,7 @@ public class ChatMessagesRouterJUnitTest extends CamelTestSupport {
         assertEquals("Hell 3 3th Group", messages3.getList_of_messages().get(2).getBody());
         assertEquals("Hell 4 3th Group", messages3.getList_of_messages().get(3).getBody());
         assertEquals("Hell 5 3th Group", messages3.getList_of_messages().get(4).getBody());
+        assertEquals("2023-10-22T21:17:12.074622", messages3.getLatest_message_time_iso());
     }
 
     @Override
