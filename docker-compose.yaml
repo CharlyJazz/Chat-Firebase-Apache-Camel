@@ -23,6 +23,11 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER_INTERNAL
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    healthcheck:
+      test: kafka-topics --bootstrap-server kafka:9092 --list
+      interval: 30s
+      timeout: 10s
+      retries: 4
   # Cassandra Database, needed for chat microservice
   cassandra:
     image: 'cassandra:4.0'
@@ -63,7 +68,7 @@ services:
       CONTAINER_MODE: "1"
     depends_on:
       - kafka
-  # Auth microservices REST API, needed for UI clients
+  # Auth microservice REST API, needed for UI clients
   auth_microservice:
     build:
       context: auth-microservice
@@ -84,6 +89,37 @@ services:
       - '8000:8000'
     depends_on:
       auth_db:
+        condition: service_healthy
+  # Chat microservice REST API, needed for UI clients and Firestore
+  chat_microservices:
+    build:
+      context: chat-microservice
+      dockerfile: ./Dockerfile
+    environment:
+      PROJECT_NAME: CHAT-MICROSERVICE
+      SECRET_KEY: 12345689
+      ACCESS_TOKEN_EXPIRE_MINUTES: 30
+      ALGORITHM: HS256
+      CASSANDRA_PORT: 9042
+      CQLENG_ALLOW_SCHEMA_MANAGEMENT: 1
+      CASSANDRA_KEYSPACE: chat_messages
+      CASSANDRA_PROTOCOL_VERSION: 4
+      CASSANDRA_CLUSTER_ADDRESS: cassandra
+      KAFKA_BOOTSTRAP_SERVER: kafka:9092
+    ports:
+      - '9000:9000'
+    depends_on:
+      kafka:
+        condition: service_healthy
+  # Apache Camel Server
+  apache_camel_microservices:
+    build:
+      context: apache-camel-service-bus
+      dockerfile: ./Dockerfile
+    environment:
+      camel.component.kafka.brokers: kafka:9092
+    depends_on:
+      kafka:
         condition: service_healthy
 
 volumes:
