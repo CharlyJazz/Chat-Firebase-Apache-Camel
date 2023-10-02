@@ -23,6 +23,11 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER_INTERNAL
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    healthcheck:
+      test: kafka-topics --bootstrap-server kafka:9092 --list
+      interval: 30s
+      timeout: 10s
+      retries: 4
   # Cassandra Database, needed for chat microservice
   cassandra:
     image: 'cassandra:4.0'
@@ -103,11 +108,9 @@ services:
       KAFKA_BOOTSTRAP_SERVER: kafka:9092
     ports:
       - '9000:9000'
-    # Need a good healthcheck
     depends_on:
-      - kafka
-      - zookeeper
-      - consumer
+      kafka:
+        condition: service_healthy
 
 volumes:
   zookeeper_data:
