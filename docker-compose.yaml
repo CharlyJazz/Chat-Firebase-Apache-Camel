@@ -45,6 +45,7 @@ services:
       dockerfile: ./Dockerfile
     environment:
       BOOSTRAP_SERVER: kafka:9092
+      CONTAINER_MODE: "1"
     depends_on:
       - kafka
 

@@ -1,26 +1,39 @@
 from kafka import KafkaClient, errors
 from kafka_consumer import KafkaMessageConsumer, BOOSTRAP_SERVER
-import json
+
 import logging
-import firebase_admin
-from firebase_admin import credentials, firestore
 import time
+import os
+
+CONTAINER_MODE = os.getenv("CONTAINER_MODE", "0")
+
+if CONTAINER_MODE == "1":
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(name)s - %(levelname)s - %(message)s'
+    )
+elif CONTAINER_MODE == "0":
+    logging.basicConfig(
+        level=logging.DEBUG,
+        filename='consumer.log',
+        filemode='w',
+        format='%(name)s - %(levelname)s - %(message)s'
+    )
+
 
 def check_kafka_availability(timeout_seconds=120):
     start_time = time.time()
-    
     while time.time() - start_time < timeout_seconds:
         try:
             client = KafkaClient(bootstrap_servers=BOOSTRAP_SERVER)
-            logging.warning("Kafka Client Successfully Connected")
+            logging.info("Kafka Client Successfully Connected")
             client.close()
             return True
         except errors.NoBrokersAvailable:
-            logging.warning("Kafka Client Error: errors.NoBrokersAvailable")
-            pass  # Continue checking
-        
-        time.sleep(1)  # Sleep for 1 second before checking again
-    
+            logging.warning("No brokers available, let's wait 1 second to check again")
+            pass
+        time.sleep(1)
+
     return False
 
 def main():
@@ -28,7 +41,9 @@ def main():
         TOPIC_NAME = 'chat_messages_grouped'
         GROUP_ID = 'aggregated-messages-group'
         FIREBASE_CRED_PATH = 'service_account_key.json'
-        
+
+        logging.info("Starting KafkaMessageConsumer initialization TOPIC_NAME: {} GROUP_ID:{} FIREBASE_CRED_PATH:{}".format(TOPIC_NAME, GROUP_ID, FIREBASE_CRED_PATH))
+
         kafka_consumer = KafkaMessageConsumer(
             topic_name=TOPIC_NAME,
             group_id=GROUP_ID,
@@ -37,7 +52,7 @@ def main():
         
         kafka_consumer.consume_messages()
     else:
-        logging.warning("Kafka is not available. Exiting.")
+        logging.error("Kafka is not available therefore we can not use KafkaMessageConsumer. Exiting.")
 
 if __name__ == "__main__":
     main()

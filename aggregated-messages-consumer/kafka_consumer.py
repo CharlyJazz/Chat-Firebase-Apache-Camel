@@ -7,11 +7,14 @@ import logging
 import firebase_admin
 import os
 
-
-# For Docker Composer kafka:9092 but for local is 29092
 BOOSTRAP_SERVER = os.getenv("BOOSTRAP_SERVER", 'kafka:9092')
 
 class KafkaMessageConsumer:
+    """
+    BOOSTRAP_SERVER:
+    - If this run using docker-compose it should be: kafka:9092 
+    - if this run using local machine python it should be: 29092
+    """
     def __init__(self, topic_name: str, group_id: str, firebase_cred_path: str, test_mode=False) -> None:
         self.topic_name = topic_name
         self.group_id = group_id
@@ -24,18 +27,16 @@ class KafkaMessageConsumer:
             group_id=self.group_id,
             value_deserializer=lambda m: json.loads(m.decode('utf-8'))
         )
-        logging.basicConfig(
-            level=logging.DEBUG,
-            filename='consumer.log',
-            filemode='w',
-            format='%(name)s - %(levelname)s - %(message)s'
-        )
         self.initialize_firebase()
 
     def close(self):
+        logging.info("Pausing Consumer")
         self.consumer.pause()
+        logging.info("Unsubscribing Consumer")
         self.consumer.unsubscribe()
+        logging.info("Closing Consumer")
         self.consumer.close()
+        login.info("Consumer turned off successfully")
 
     def initialize_firebase(self) -> None:
         cred = credentials.Certificate(self.firebase_cred_path)
@@ -52,6 +53,7 @@ MESSAGE_VALUE: {message.value}"
         )
 
     def consume_messages(self) -> None:
+        logging.info("Starting messages consuming to send to Firestore")
         for message in self.consumer:
             self.log_message(message)
             self.chat_ref.add(message.value)

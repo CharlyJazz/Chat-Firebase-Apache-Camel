@@ -102,10 +102,17 @@ cd apache-camel-service-bus && mvn package && mvn spring-boot:run
 
 ## Docker Development Worflow
 
-### Kick off all the containers
+### Main command to run docker-compose
 
 ```bash
 docker-compose rm -svf && docker-compose up
+```
+
+### If you update code in the consumer folder:
+
+```bash
+alias run="docker rmi chat-firebase-apache-camel_consumer -f && docker-compose rm -svf && docker-compose up"
+run
 ```
 
 ### Run Kafka CLI:
