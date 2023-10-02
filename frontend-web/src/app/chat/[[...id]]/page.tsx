@@ -4,16 +4,7 @@ import useGetCurrentUserChats from "@/api/hooks/useGetCurrentUserChats";
 import useGetUsers from "@/api/hooks/useGetUsers";
 import ChatApplication, { SelectedChat } from "@/components/ChatApplication";
 import { useAuth } from "@/lib/Authentication";
-import {
-  Avatar,
-  Badge,
-  Button,
-  Layout,
-  Menu,
-  Space,
-  Spin,
-  Typography,
-} from "antd";
+import { Avatar, Badge, Button, Layout, Menu, Space, Typography } from "antd";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 

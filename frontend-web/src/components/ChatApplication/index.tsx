@@ -9,13 +9,14 @@ import {
   List,
   Row,
   Skeleton,
-  Spin,
   Typography,
 } from "antd";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { db } from "../firebase/firebaseConfig";
+import { db } from "../../firebase/firebaseConfig";
+import { LoadingChat } from "./Loading";
+import { WrapperDiv } from "./WrapperDiv";
 
 export interface SelectedChat extends User, ChatSchema {}
 
@@ -23,35 +24,6 @@ interface ChatApplicationProps {
   selectedChat: SelectedChat | null;
   chatCreationLoading: boolean;
 }
-
-const WrapperDiv = ({ children }: React.PropsWithChildren) => {
-  return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-        flex: 1,
-        height: "100%",
-      }}
-    >
-      {children}
-    </div>
-  );
-};
-
-const LoadingChat = () => (
-  <WrapperDiv>
-    <Row style={{ margin: "auto", width: 350 }}>
-      <Col span={6}>
-        <Spin size="large" />
-      </Col>
-      <Col span={6}>
-        <Typography>Loading Chat</Typography>
-      </Col>
-    </Row>
-  </WrapperDiv>
-);
 
 const ChatApplication: React.FC<ChatApplicationProps> = ({
   selectedChat,
@@ -76,32 +48,25 @@ const ChatApplication: React.FC<ChatApplicationProps> = ({
   const { authState } = useAuth();
 
   const handleSendMessage = () => {
-    sendMessage(
-      {
-        body: messageText,
-        chat_id: selectedChat!.chat_id,
-        from_user: authState.id,
-        to_user: String(selectedChat!.id), // What?
-      },
-      mutate
-    );
+    const createMessagePayload: CreateMessagePayload = {
+      body: messageText,
+      chat_id: selectedChat!.chat_id,
+      from_user: authState.id,
+      to_user: String(selectedChat!.id),
+    };
+
+    sendMessage(createMessagePayload, mutate);
 
     setMessageText("");
   };
 
-  if (chatCreationLoading) {
-    return <LoadingChat />;
-  }
-
   useEffect(() => {
-    if (selectedChat) {
+    if (selectedChat && messagesForUI.length) {
       const q = query(
         collection(db, "messages"),
         where("chat_id", "==", selectedChat.chat_id),
-        where("from_user", "==", String(selectedChat.id))
-        // 1.) This will fix that currently we are getting all the messages related to the chat
-        // 2.) I need to update the Java Server
-        // where("latest_message_time_iso", "==", String(latestMessageTimeISO)),
+        where("from_user", "==", String(selectedChat.id)),
+        where("latest_message_time_iso", ">", messagesForUI[0].time_iso)
       );
 
       const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -109,7 +74,20 @@ const ChatApplication: React.FC<ChatApplicationProps> = ({
           if (change.type === "added") {
             const docData = change.doc.data() as FirestoreNewMessageContract;
             if (docData.list_of_messages && docData.list_of_messages.length) {
-              // setMessagesForUI([...messagesForUI, ...docData.list_of_messages]);
+              const mappedIds = messagesForUI.map((msg) => msg.time_iso);
+              if (!mappedIds.includes(docData.latest_message_time_iso)) {
+                console.log(
+                  "Injecting new messages from firestore into the state..."
+                );
+
+                const messagesSorted = docData.list_of_messages.sort((a, b) => {
+                  const timeA = new Date(a.time_iso).getTime();
+                  const timeB = new Date(b.time_iso).getTime();
+                  return timeB - timeA;
+                });
+
+                setMessagesForUI([...messagesSorted, ...messagesForUI]);
+              }
             }
           }
         });
@@ -119,7 +97,7 @@ const ChatApplication: React.FC<ChatApplicationProps> = ({
         unsubscribe();
       };
     }
-  }, [selectedChat]);
+  }, [selectedChat, messagesForUI]);
 
   useEffect(() => {
     if (paginatingRef.current && !messagesError && messagesData.length) {
@@ -165,6 +143,14 @@ const ChatApplication: React.FC<ChatApplicationProps> = ({
     ? false
     : messagesForUI.length >= 10;
 
+  if (chatCreationLoading) {
+    return (
+      <WrapperDiv>
+        <LoadingChat />
+      </WrapperDiv>
+    );
+  }
+
   return (
     <WrapperDiv>
       <h2>{selectedChat?.username}</h2>
@@ -191,21 +177,19 @@ const ChatApplication: React.FC<ChatApplicationProps> = ({
           <List
             dataSource={dataSource}
             locale={{ emptyText: "There is not messages in this chat :(" }}
-            renderItem={({ body, message_id, time_iso }) => {
+            renderItem={({ body, message_id, time_iso, from_user }, index) => {
+              const notOwner = String(selectedChat?.id) === from_user;
+              const label = notOwner ? selectedChat!.username[0] : "You";
               return (
-                <List.Item key={message_id}>
+                <List.Item key={message_id} style={{ border: "none" }}>
                   <List.Item.Meta
-                    avatar={
-                      <Avatar size={"small"}>
-                        {selectedChat!.username[0]}
-                      </Avatar>
-                    }
-                    title={<Typography>{selectedChat!.username}</Typography>}
+                    avatar={<Avatar size={"small"}>{label}</Avatar>}
+                    title={<Typography>{label}</Typography>}
                     description={body}
                   />
                   <div>
-                    <Typography style={{ fontSize: "11px" }}>
-                      {new Date(time_iso).toLocaleTimeString()}
+                    <Typography style={{ fontSize: "10px" }}>
+                      {new Date(time_iso).toLocaleString()}
                     </Typography>
                   </div>
                 </List.Item>
