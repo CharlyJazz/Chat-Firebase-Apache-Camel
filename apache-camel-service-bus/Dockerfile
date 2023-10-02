@@ -1,22 +1,15 @@
-FROM openjdk:11-jre-slim
+# Use an official Maven image
+FROM maven:3.8.4-openjdk-17
 
-ENV CAMEL_VERSION 3.14.0
-ENV KAFKA_VERSION 2.8.0
-
+# Set the working directory in the container
 WORKDIR /app
 
-RUN wget https://downloads.apache.org/camel/${CAMEL_VERSION}/apache-camel-${CAMEL_VERSION}.tar.gz && \
-    tar -xzf apache-camel-${CAMEL_VERSION}.tar.gz && \
-    rm apache-camel-${CAMEL_VERSION}.tar.gz && \
-    mv apache-camel-${CAMEL_VERSION} camel
+# Copy the source code and POM file to the container
+COPY src/ /app/src/
+COPY pom.xml /app/
 
-RUN wget https://downloads.apache.org/kafka/${KAFKA_VERSION}/kafka_2.13-${KAFKA_VERSION}.tgz && \
-    tar -xzf kafka_2.13-${KAFKA_VERSION}.tgz && \
-    rm kafka_2.13-${KAFKA_VERSION}.tgz && \
-    mv kafka_2.13-${KAFKA_VERSION} kafka
+# Build the application to create the .jar file (skip tests)
+RUN mvn package -DskipTests
 
-COPY apache-camel-service-bus.jar /app
-
-EXPOSE 9092
-
-CMD ["java", "-jar", "apache-camel-service-bus.jar"]
+# Specify the command to run the Spring Boot application
+CMD ["java", "-jar", "target/apache-camel-service-bus-1.0.0.jar"]

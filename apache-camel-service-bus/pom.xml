@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.service.bus</groupId>
 	<artifactId>apache-camel-service-bus</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>apache-camel-service-bus</name>
 	<description>Apache Camel Service Bus</description>
 	<properties>
