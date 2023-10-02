@@ -71,7 +71,7 @@ services:
     environment:
       PROJECT_NAME: AUTHENTICATION-MICROSERVICE
       POSTGRES_HOST: auth_db
-      POSTGRES_PORT: 5433
+      POSTGRES_PORT: 5432
       POSTGRES_DB: auth_microservice
       POSTGRES_USER: auth_microservice
       POSTGRES_PASSWORD: auth_microservice
