@@ -7,6 +7,9 @@ The chat pagination utilize Cassandra instead of Firestore. This strategic decis
 - It alleviates the load on Firestore's read operations
 - Harnesses the inherent advantages of Cassandra for optimizing the partitioning using the `chat_id` as the partition key.
 
+[![Demo Video](https://github.com/CharlyJazz/Chat-Firebase-Apache-Camel/assets/12489333/79618746-367e-474c-bc16-07b2da7693dc)](https://user-images.githubusercontent.com/12489333/273462854-31d8e470-4169-4ac7-a397-327987f885f3.mov)
+
+
 The next content of this paper explain the sistem using a Architectural Map Features approach.
 
 ## Problem
