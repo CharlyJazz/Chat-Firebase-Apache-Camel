@@ -1,21 +1,13 @@
 import useGetChatMessages from "@/api/hooks/useGetChatMessages";
 import useSendMessage from "@/api/hooks/useSendMessage";
 import { useAuth } from "@/lib/Authentication";
-import {
-  Avatar,
-  Button,
-  Col,
-  Input,
-  List,
-  Row,
-  Skeleton,
-  Typography,
-} from "antd";
+import { Button, Col, Input, List, Row, Skeleton } from "antd";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { db } from "../../firebase/firebaseConfig";
 import { LoadingChat } from "./Loading";
+import { Message } from "./Message";
 import { WrapperDiv } from "./WrapperDiv";
 
 export interface SelectedChat extends User, ChatSchema {}
@@ -180,19 +172,17 @@ const ChatApplication: React.FC<ChatApplicationProps> = ({
             renderItem={({ body, message_id, time_iso, from_user }, index) => {
               const notOwner = String(selectedChat?.id) === from_user;
               const label = notOwner ? selectedChat!.username[0] : "You";
+              const firstInColumn =
+                dataSource[index - 1]?.from_user !== from_user;
               return (
-                <List.Item key={message_id} style={{ border: "none" }}>
-                  <List.Item.Meta
-                    avatar={<Avatar size={"small"}>{label}</Avatar>}
-                    title={<Typography>{label}</Typography>}
-                    description={body}
-                  />
-                  <div>
-                    <Typography style={{ fontSize: "10px" }}>
-                      {new Date(time_iso).toLocaleString()}
-                    </Typography>
-                  </div>
-                </List.Item>
+                <Message
+                  firstInColumn={firstInColumn}
+                  key={message_id}
+                  time_iso={time_iso}
+                  body={body}
+                  label={label}
+                  notOwner={notOwner}
+                />
               );
             }}
           />

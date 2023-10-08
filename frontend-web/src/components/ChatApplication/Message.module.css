@@ -1,0 +1,54 @@
+.Message {
+  border: none;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.Box {
+  border: 1px solid #c0c0c0;
+  padding: 4px 10px;
+  border-radius: 5px;
+}
+
+.NotOwner {
+  background: bisque;
+}
+
+.Owner {
+  background: beige;
+}
+
+.FirstInColumn {
+  border: 1px solid red;
+}
+
+.ExtraPaddingRight {
+  min-width: 176px;
+}
+
+.Avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+}
+
+.Title {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.Description {
+  font-size: 14px;
+  margin: 0;
+}
+
+.Time {
+  font-size: 10px;
+}
