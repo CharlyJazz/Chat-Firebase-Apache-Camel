@@ -7,6 +7,7 @@ import { useAuth } from "@/lib/Authentication";
 import { Avatar, Badge, Button, Layout, Menu, Space, Typography } from "antd";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import stc from "string-to-color";
 
 const { Sider, Content } = Layout;
 
@@ -137,15 +138,20 @@ const ChatPage = () => {
                     onClick={() => handleUserSelect(user)}
                   >
                     <Space>
-                      {/* Display user's avatar */}
                       <Badge
                         size="small"
                         count={friendOrUnknow ? "" : "?"}
                         color={friendOrUnknow ? "green" : "yellow"}
                       >
-                        <Avatar size={"small"}>{user.username[0]}</Avatar>
+                        <Avatar
+                          size={"small"}
+                          style={{
+                            backgroundColor: stc(user.username + user.id),
+                          }}
+                        >
+                          {user.username[0]}
+                        </Avatar>
                       </Badge>
-                      {/* Display user's username */}
                       <Typography.Text>{user.username}</Typography.Text>
                     </Space>
                   </Menu.Item>
