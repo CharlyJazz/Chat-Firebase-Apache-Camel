@@ -121,6 +121,16 @@ services:
     depends_on:
       kafka:
         condition: service_healthy
+  # Front End Next JS
+  front_end_next_js:
+    build:
+      context: frontend-web
+      dockerfile: ./Dockerfile
+    depends_on:
+      kafka:
+        condition: service_healthy
+    ports:
+      - '3000:3000'
 
 volumes:
   zookeeper_data:

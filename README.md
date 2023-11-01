@@ -9,7 +9,6 @@ The chat pagination utilize Cassandra instead of Firestore. This strategic decis
 
 [![Demo Video](https://github.com/CharlyJazz/Chat-Firebase-Apache-Camel/assets/12489333/79618746-367e-474c-bc16-07b2da7693dc)](https://user-images.githubusercontent.com/12489333/273462854-31d8e470-4169-4ac7-a397-327987f885f3.mov)
 
-
 The next content of this paper explain the sistem using a Architectural Map Features approach.
 
 ## Problem
@@ -86,24 +85,15 @@ docker-compose rm -svf && docker-compose up
 It should create 9 containers:
 
 ```
-1.)
-chat-firebase-apache-camel_zookeeper_1
-2.)
-chat-firebase-apache-camel_cassandra_1
-3.)
-chat-firebase-apache-camel_auth_db_1
-4.)
-chat-firebase-apache-camel_kafka_1
-5.)
-chat-firebase-apache-camel_consumer_1
-6.)
-chat-firebase-apache-camel_auth_microservice_1
-7.)
-chat-firebase-apache-camel_apache_camel_microservices_1
-8.)
-chat-firebase-apache-camel_chat_microservices_1
-9.)
-chat-firebase-apache-camel_frontend-web
+1.) chat-firebase-apache-camel_zookeeper_1
+2.) chat-firebase-apache-camel_cassandra_1
+3.) chat-firebase-apache-camel_auth_db_1
+4.) chat-firebase-apache-camel_kafka_1
+5.) chat-firebase-apache-camel_consumer_1
+6.) chat-firebase-apache-camel_auth_microservice_1
+7.) chat-firebase-apache-camel_apache_camel_microservices_1
+8.) chat-firebase-apache-camel_chat_microservices_1
+9.) front_end_next_js_1
 ```
 
 Then you can open `http://localhost:3000/` and start using the chat.

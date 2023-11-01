@@ -33,3 +33,5 @@ aggregated-messages-consumer/service_account_key.json
 .vscode
 
 */.pytest_cache
+
+frontend-web/.env
