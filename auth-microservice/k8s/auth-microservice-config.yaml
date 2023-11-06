@@ -1,0 +1,16 @@
+apiVersion: apps/v1
+kind: ConfigMap
+metadata:
+  name: auth-microservice-config
+data:
+  ACCESS_TOKEN_EXPIRE_MINUTES: "300"
+  ALGORITHM: "HS256"
+  FIRST_USER_PASSWORD: "123456789"
+  FIRST_USER_USERNAME: "charlyjazz"
+  POSTGRES_DB: "auth_microservice"
+  POSTGRES_HOST: "auth_db"
+  POSTGRES_PASSWORD: "auth_microservice"
+  POSTGRES_PORT: "5432"
+  POSTGRES_USER: "auth_microservice"
+  PROJECT_NAME: "AUTHENTICATION-MICROSERVICE"
+  SECRET_KEY: "12345689"
