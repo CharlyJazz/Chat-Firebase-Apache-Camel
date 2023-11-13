@@ -1,6 +1,6 @@
 from fastapi import Depends
 
-from app.core.kafka import kafka_producer
+# from app.core.kafka import kafka_producer
 from app.core.config import settings
 from app.core.logging import Logging
 
@@ -14,7 +14,8 @@ get_token_data = validator.get_token_data
 Kafka Producer instance as dependency in order to easy mock it
 """
 def get_kafka_producer():
-    return kafka_producer
+    return None
+    # return kafka_producer
 
 """
 Tiny helper to retrieve the user id from then JWT token
