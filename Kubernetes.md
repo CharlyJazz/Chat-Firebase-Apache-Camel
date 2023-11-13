@@ -22,4 +22,7 @@
 
 - To test the connection:
 - `k exec -it kafka-broker-6d896685cd-t9p48 -- /bin/sh`
+- Create a topic to test
 - `kafka-topics --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic testtopic`
+- Verify is a topic is getting messages
+- `kafka-console-consumer --bootstrap-server localhost:9092 --topic chat_messages from-beginning`

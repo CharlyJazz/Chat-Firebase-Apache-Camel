@@ -8,7 +8,9 @@ data:
   ACCESS_TOKEN_EXPIRE_MINUTES: "30"
   ALGORITHM: HS256
   CQLENG_ALLOW_SCHEMA_MANAGEMENT: "1"
-  KAFKA_BOOTSTRAP_SERVER: kafka:9092
+  # - Service metadata name: kafka-service in:
+  #   kafka/k8s/kafka-service.yaml
+  KAFKA_BOOTSTRAP_SERVER: kafka-service:9092
   PROJECT_NAME: CHAT-MICROSERVICE
   SECRET_KEY: "12345689"
   CASSANDRA_KEYSPACE: chat_messages

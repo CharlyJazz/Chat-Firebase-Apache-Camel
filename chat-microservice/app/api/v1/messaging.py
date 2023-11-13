@@ -8,7 +8,7 @@ from app.core.config import settings
 from app.models.chat_messages import ChatMessages
 from app.models.chat import Chat
 from ..deps import (
-    # get_kafka_producer,
+    get_kafka_producer,
     get_token_data,
     get_current_user_id,
     get_logging_event
@@ -31,7 +31,7 @@ router = APIRouter(tags=["Messaging"])
 )
 async def create_message(
     message: MessageSentREST,
-    # kafka_producer = Depends(get_kafka_producer),
+    kafka_producer = Depends(get_kafka_producer),
     current_user_id = Depends(get_current_user_id),
     Logging = Depends(get_logging_event)
 ):
@@ -59,7 +59,7 @@ async def create_message(
         schema = MessageSchema(**dict(record_created))
         json_dump = json.dumps(dict(schema), cls=UUIDEncoder).encode('utf-8')
         Logging.info('Message created {}'.format(json_dump))
-        # await kafka_producer.send_and_wait("chat_messages", json_dump)
+        await kafka_producer.send_and_wait("chat_messages", json_dump)
         return schema
     except BaseException as e:
         Logging.error(f"An error occurred: {str(e)}")  # Log the error message
