@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-microservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth-microservice
+      type: microservice
+  template:
+    metadata:
+      labels:
+        app: auth-microservice
+        type: microservice
+    spec:
+      containers:
+          - name: auth-microservice
+            image: charlyjazz/auth-microservice:latest
+            ports:
+              - containerPort: 8000
+                hostPort: 8000
+                protocol: TCP
+            envFrom:
+              - configMapRef:
+                  name: auth-microservice-config
+            resources: {}

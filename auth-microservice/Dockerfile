@@ -24,12 +24,8 @@ EXPOSE 8000
 
 RUN pipenv install greenlet
 
-# Run Migrations
-# RUN alembic revision --autogenerate -m Create table Users
-# RUN alembic upgrade head
-
 # Define an environment variable for FastAPI to run in production mode
 ENV UVICORN_CMD="uvicorn app.main:app --host 0.0.0.0 --port 8000"
 
 # Start FastAPI when the container launches
-CMD ["pipenv", "run", "sh", "-c", "$UVICORN_CMD"]
+CMD pipenv run sh -c "alembic upgrade head && $UVICORN_CMD"

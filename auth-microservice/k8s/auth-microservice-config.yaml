@@ -1,0 +1,20 @@
+# For a ConfigMap, the correct API version is v1 and not apps/v1. 
+# The apps/v1 API version is used for resources like Deployments, StatefulSets, etc.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: auth-microservice-config
+data:
+  ACCESS_TOKEN_EXPIRE_MINUTES: "300"
+  ALGORITHM: "HS256"
+  FIRST_USER_PASSWORD: "123456789"
+  FIRST_USER_USERNAME: "charlyjazz"
+  POSTGRES_DB: "auth_microservice"
+  POSTGRES_PASSWORD: "auth_microservice"
+  POSTGRES_USER: "auth_microservice"
+  # - Service metadata name: auth-db-service in:
+  #   auth-microservice/k8s/auth-db-service.yaml
+  POSTGRES_HOST: "auth-db-service"
+  POSTGRES_PORT: "5432"
+  PROJECT_NAME: "AUTHENTICATION-MICROSERVICE"
+  SECRET_KEY: "12345689"

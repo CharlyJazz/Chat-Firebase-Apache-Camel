@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: auth-db-deploy
+      app: database
+  template:
+    metadata:
+      labels:
+        name: auth-db-deploy
+        app: database
+    spec:
+      containers:
+          - image: postgres
+            envFrom:
+              - configMapRef:
+                  name: auth-microservice-config
+            livenessProbe:
+              exec:
+                command:
+                  - pg_isready
+              failureThreshold: 5
+              periodSeconds: 5
+              timeoutSeconds: 10
+            name: auth-db
+            ports:
+              - containerPort: 5432
+                hostPort: 5433
+                protocol: TCP
+            resources: {}
+            volumeMounts:
+              - mountPath: /var/lib/postgresql/data
+                name: auth-db-volume
+      volumes:
+        - name: auth-db-volume
+          persistentVolumeClaim:
+            claimName: auth-db-volume
