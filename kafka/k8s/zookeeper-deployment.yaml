@@ -1,0 +1,30 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zookeeper
+  labels:
+    app: zookeeper
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zookeeper
+  template:
+    metadata:
+      labels:
+        app: zookeeper
+    spec:
+      containers:
+        - image: confluentinc/cp-zookeeper:latest
+          name: zookeeper
+          env:
+          - name: ZOOKEEPER_CLIENT_PORT
+            value: "2181"
+          - name: ZOOKEEPER_TICK_TIME
+            value: "2000"
+          ports:
+            - containerPort: 2181
+              hostPort: 2181
+              protocol: TCP
+          resources: {}

@@ -1,37 +1,33 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    kompose.cmd: kompose convert
-    kompose.version: 1.31.2 (HEAD)
-  creationTimestamp: null
+  name: aggregated-messages-consumer
   labels:
-    io.kompose.service: consumer
-  name: consumer
+    app: kafka-consumer
 spec:
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: consumer
-  strategy: {}
+      app: aggregated-messages-consumer
   template:
     metadata:
-      annotations:
-        kompose.cmd: kompose convert
-        kompose.version: 1.31.2 (HEAD)
-      creationTimestamp: null
       labels:
-        io.kompose.network/chat-firebase-apache-camel-default: "true"
-        io.kompose.service: consumer
+        app: aggregated-messages-consumer
     spec:
       containers:
-        - env:
-            - name: BOOSTRAP_SERVER
-              value: kafka:9092
+        - image: charlyjazz/amc:latest
+          name: aggregated-messages-consumer
+          env:
             - name: CONTAINER_MODE
               value: "1"
-          image: consumer
-          name: consumer
+            - name: BOOTSTRAP_SERVER_ADDRESS
+              value: kafka-service:9092
           resources: {}
-      restartPolicy: Always
-status: {}
+          volumeMounts:
+            - name: firebase-secret
+              mountPath: /var/lib
+              readOnly: true
+      volumes:
+      - name: firebase-secret
+        secret:
+          secretName: firebase-secret

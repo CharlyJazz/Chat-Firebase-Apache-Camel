@@ -1,14 +1,11 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  creationTimestamp: null
-  labels:
-    io.kompose.service: messaging-db-volume
-  name: messaging-db-volume
+  name: chat-db-volume
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 100Mi
+      storage: 200Mi
 status: {}
