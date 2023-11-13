@@ -6,7 +6,7 @@ metadata:
     name: auth-microservice-service
     app: microservice
 spec:
-  type: ClusterIP
+  type: LoadBalancer
   ports:
     - port: 8000
       targetPort: 8000

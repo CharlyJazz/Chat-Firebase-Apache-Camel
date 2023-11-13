@@ -8,9 +8,8 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-    - name: "5433"
-      port: 5433
-      targetPort: 5432
+      - port: 5432
+        targetPort: 5432
   selector:
     name: auth-db-deploy
     app: database

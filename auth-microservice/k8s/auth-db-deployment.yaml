@@ -22,7 +22,7 @@ spec:
             livenessProbe:
               exec:
                 command:
-                  - pg_isready -U auth_microservice
+                  - pg_isready
               failureThreshold: 5
               periodSeconds: 5
               timeoutSeconds: 10

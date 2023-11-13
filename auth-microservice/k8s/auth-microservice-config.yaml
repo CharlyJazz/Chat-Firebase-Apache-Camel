@@ -1,4 +1,6 @@
-apiVersion: apps/v1
+# For a ConfigMap, the correct API version is v1 and not apps/v1. 
+# The apps/v1 API version is used for resources like Deployments, StatefulSets, etc.
+apiVersion: v1
 kind: ConfigMap
 metadata:
   name: auth-microservice-config
