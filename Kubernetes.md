@@ -26,3 +26,9 @@
 - `kafka-topics --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic testtopic`
 - Verify is a topic is getting messages
 - `kafka-console-consumer --bootstrap-server localhost:9092 --topic chat_messages from-beginning`
+
+### Aggregated Messages Consumer
+
+- docker build -t charlyjazz/amc:latest .
+- docker push charlyjazz/amc:latest
+- kubectl create secret generic firebase-secret --from-file=service_account_key.json=./service_account_key.json

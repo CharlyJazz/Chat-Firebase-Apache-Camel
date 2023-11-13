@@ -7,13 +7,15 @@ import logging
 import firebase_admin
 import os
 
-BOOSTRAP_SERVER = os.getenv("BOOSTRAP_SERVER", 'kafka:9092')
+BOOTSTRAP_SERVER_ADDRESS = os.getenv("BOOTSTRAP_SERVER_ADDRESS", "kafka:9092")
+CONTAINER_MODE = os.getenv("CONTAINER_MODE", "0")
 
 class KafkaMessageConsumer:
     """
-    BOOSTRAP_SERVER:
+    BOOTSTRAP_SERVER_ADDRESS:
     - If this run using docker-compose it should be: kafka:9092 
     - if this run using local machine python it should be: 29092
+    - In k8 is kafka-service:9092
     """
     def __init__(self, topic_name: str, group_id: str, firebase_cred_path: str, test_mode=False) -> None:
         self.topic_name = topic_name
@@ -22,7 +24,7 @@ class KafkaMessageConsumer:
         self.test_mode = test_mode
         self.consumer = KafkaConsumer(
             self.topic_name,
-            bootstrap_servers=BOOSTRAP_SERVER,
+            bootstrap_servers=BOOTSTRAP_SERVER_ADDRESS,
             auto_offset_reset='latest',
             group_id=self.group_id,
             value_deserializer=lambda m: json.loads(m.decode('utf-8'))

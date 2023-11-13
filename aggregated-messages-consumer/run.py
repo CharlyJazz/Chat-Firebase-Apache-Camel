@@ -1,11 +1,14 @@
 from kafka import KafkaClient, errors
-from kafka_consumer import KafkaMessageConsumer, BOOSTRAP_SERVER
+from kafka_consumer import KafkaMessageConsumer, BOOTSTRAP_SERVER_ADDRESS, CONTAINER_MODE
 
 import logging
 import time
 import os
 
-CONTAINER_MODE = os.getenv("CONTAINER_MODE", "0")
+logging.warning("CONTAINER_MODE = <{}>".format(CONTAINER_MODE))
+
+logging.warning("BOOTSTRAP_SERVER_ADDRESS = <{}>".format(BOOTSTRAP_SERVER_ADDRESS))
+
 
 if CONTAINER_MODE == "1":
     logging.basicConfig(
@@ -25,7 +28,7 @@ def check_kafka_availability(timeout_seconds=120):
     start_time = time.time()
     while time.time() - start_time < timeout_seconds:
         try:
-            client = KafkaClient(bootstrap_servers=BOOSTRAP_SERVER)
+            client = KafkaClient(bootstrap_servers=BOOTSTRAP_SERVER_ADDRESS)
             logging.info("Kafka Client Successfully Connected")
             client.close()
             return True
