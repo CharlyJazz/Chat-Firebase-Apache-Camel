@@ -3,5 +3,17 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: chat-microservice-config
+  name: chat-microservices-config
 data:
+  ACCESS_TOKEN_EXPIRE_MINUTES: "30"
+  ALGORITHM: HS256
+  CQLENG_ALLOW_SCHEMA_MANAGEMENT: "1"
+  KAFKA_BOOTSTRAP_SERVER: kafka:9092
+  PROJECT_NAME: CHAT-MICROSERVICE
+  SECRET_KEY: "12345689"
+  CASSANDRA_KEYSPACE: chat_messages
+  CASSANDRA_PORT: "9042"
+  CASSANDRA_PROTOCOL_VERSION: "4"
+  # - Service metadata name: chat-db-service in:
+  #   chat-microservice/k8s/cassandra-service.yaml
+  CASSANDRA_CLUSTER_ADDRESS: chat-db-service

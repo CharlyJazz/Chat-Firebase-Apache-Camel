@@ -1,47 +1,36 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    kompose.cmd: kompose convert
-    kompose.version: 1.31.2 (HEAD)
-  creationTimestamp: null
-  labels:
-    io.kompose.service: cassandra
-  name: cassandra
+  name: chat-db
 spec:
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: cassandra
-  strategy:
-    type: Recreate
+      name: chat-db-deploy
+      app: database
   template:
     metadata:
-      annotations:
-        kompose.cmd: kompose convert
-        kompose.version: 1.31.2 (HEAD)
-      creationTimestamp: null
       labels:
-        io.kompose.network/chat-firebase-apache-camel-default: "true"
-        io.kompose.service: cassandra
+        name: chat-db-deploy
+        app: database
     spec:
       containers:
         - env:
             - name: CASSANDRA_CLUSTER_NAME
-              value: book
+              value: chats_database_cluster
           image: cassandra:4.0
           name: cassandra
           ports:
             - containerPort: 9042
               hostPort: 9042
               protocol: TCP
-          resources: {}
           volumeMounts:
             - mountPath: /var/lib/cassandra
-              name: messaging-db-volume
+              name: chat-db-volume
+          resources: {}
       restartPolicy: Always
       volumes:
-        - name: messaging-db-volume
+        - name: chat-db-volume
           persistentVolumeClaim:
-            claimName: messaging-db-volume
+            claimName: chat-db-volume
 status: {}

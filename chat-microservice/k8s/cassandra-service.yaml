@@ -1,19 +1,15 @@
 apiVersion: v1
 kind: Service
 metadata:
-  annotations:
-    kompose.cmd: kompose convert
-    kompose.version: 1.31.2 (HEAD)
-  creationTimestamp: null
+  name: chat-db-service
   labels:
-    io.kompose.service: cassandra
-  name: cassandra
+    name: chat-db-service
+    app: database
 spec:
+  type: LoadBalancer
   ports:
-    - name: "9042"
-      port: 9042
-      targetPort: 9042
+      - port: 9042
+        targetPort: 9042
   selector:
-    io.kompose.service: cassandra
-status:
-  loadBalancer: {}
+    name: chat-db-deploy
+    app: database
