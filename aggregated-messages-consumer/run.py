@@ -5,6 +5,7 @@ import logging
 import json
 import os
 import sys
+import time
 
 class JsonFormatter(logging.Formatter):
     def format(self, record):
@@ -67,7 +68,7 @@ def main():
     if check_kafka_availability():
         TOPIC_NAME = 'chat_messages_grouped'
         GROUP_ID = 'aggregated-messages-group'
-        FIREBASE_CRED_PATH = 'service_account_key.json'
+        FIREBASE_CRED_PATH = './firebase/service_account_key.json'
 
         logging.info("Starting KafkaMessageConsumer initialization TOPIC_NAME: {} GROUP_ID:{} FIREBASE_CRED_PATH:{}".format(TOPIC_NAME, GROUP_ID, FIREBASE_CRED_PATH))
 
