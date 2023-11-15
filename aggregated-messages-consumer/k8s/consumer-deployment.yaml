@@ -25,7 +25,7 @@ spec:
           resources: {}
           volumeMounts:
             - name: firebase-secret
-              mountPath: /var/lib
+              mountPath: /
               readOnly: true
       volumes:
       - name: firebase-secret
