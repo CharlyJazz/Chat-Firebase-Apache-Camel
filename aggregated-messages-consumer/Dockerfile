@@ -13,5 +13,7 @@ RUN pip install pipenv && pipenv install --deploy --ignore-pipfile
 # Copy the rest of the application code into the container
 COPY . /app/
 
+ENV PYTHONUNBUFFERED=1 
+
 # Define the command to run your application
 CMD ["pipenv", "run", "python", "run.py"]
