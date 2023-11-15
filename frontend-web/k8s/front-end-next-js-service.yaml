@@ -1,19 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  annotations:
-    kompose.cmd: kompose convert
-    kompose.version: 1.31.2 (HEAD)
-  creationTimestamp: null
-  labels:
-    io.kompose.service: front-end-next-js
-  name: front-end-next-js
+  name: frontend-web-service
 spec:
+  selector:
+    app: frontend-web
   ports:
-    - name: "3000"
+    - protocol: TCP
       port: 3000
       targetPort: 3000
-  selector:
-    io.kompose.service: front-end-next-js
-status:
-  loadBalancer: {}
+  type: LoadBalancer

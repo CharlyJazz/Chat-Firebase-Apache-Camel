@@ -2,7 +2,12 @@
 
 ### General:
 
+- minikube start --cpus 4 --memory 4000
 - minikube tunnel (Open tunnel for loadbalancer services)
+- kubectl rollout restart deployment frontend-web-deployment
+- kubectl rollout restart deployment aggregated-messages-consumer
+- kubectl rollout restart deployment kafka-broker
+- kubectl rollout restart deployment chat-microservice
 
 ### Auth Microservice Folder:
 
@@ -32,3 +37,14 @@
 - docker build -t charlyjazz/amc:latest .
 - docker push charlyjazz/amc:latest
 - kubectl create secret generic firebase-secret --from-file=service_account_key.json=./service_account_key.json
+
+### Apache Camel Service Bus
+
+- docker build -t charlyjazz/apache-camel-microservice:latest .
+- docker push charlyjazz/apache-camel-microservice:latest
+
+### Front-End Web
+
+- docker build -t charlyjazz/frontend-web:latest .
+- docker push charlyjazz/frontend-web:latest
+- kubectl create secret generic frontend-secrets --from-env-file=.env

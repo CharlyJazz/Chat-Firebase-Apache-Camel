@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apache-camel-microservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: apache-camel-microservice
+      type: microservice
+  template:
+    metadata:
+      labels:
+        app: apache-camel-microservice
+        type: microservice
+    spec:
+      containers:
+          - name: apache-camel-microservice
+            image: charlyjazz/apache-camel-microservice:latest
+            env:
+              - name: camel.component.kafka.brokers
+                value: kafka-service:9092
+            resources: {}
+
