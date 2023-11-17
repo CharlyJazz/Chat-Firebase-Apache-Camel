@@ -8,6 +8,8 @@
 - Set quota `gcloud auth application-default set-quota-project apache-camel-chat-development`
 - terraform init - Save variables
 - terraform apply - Create resources in GCP
+- Super importante correr esto diario gcloud config set project
+- gcloud container clusters get-credentials chat1-405416-gke --region us-central1 - kubectl context
 
 ### Configure kubectl
 
