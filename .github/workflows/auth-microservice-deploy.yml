@@ -1,0 +1,21 @@
+name: Example Workflow
+
+on:
+  push:
+    branches: 
+      - main
+    paths:
+      - 'auth-microservice/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Run Script
+        run: |
+          echo "Changes detected in auth-microservice/**"
+          # Add your build, test, or deployment scripts here
