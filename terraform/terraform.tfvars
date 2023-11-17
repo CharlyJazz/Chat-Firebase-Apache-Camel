@@ -1,3 +1,2 @@
-project_id   = "apache-camel-chat-development"
-region       = "us-central1"
-machine_type = "n1-standard-1" # Cheaper machine
+project_id = "chat1-405416"
+region     = "us-central1"
