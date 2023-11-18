@@ -46,3 +46,6 @@
   gcloud projects add-iam-policy-binding chat1-405416 \
    --member=serviceAccount:github-action@chat1-405416.iam.gserviceaccount.com \
    --role=roles/container.clusterViewer
+
+- I used this action: https://github.com/simenandre/setup-gke-gcloud-auth-plugin/blob/main/action.yml
+- XD
