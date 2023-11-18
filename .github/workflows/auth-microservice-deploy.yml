@@ -60,7 +60,7 @@ jobs:
 
       - name: Update Deployment Image
         run: |
-          sed -i 's|charlyjazz/auth-microservice:latest|charlyjazz/auth-microservice:${{ steps.extract_branch.outputs.branch }}|' {{env.K8_DIR}}/auth-microservice-deployment.yaml
+          sed -i 's|charlyjazz/auth-microservice:latest|charlyjazz/auth-microservice:${{ steps.extract_branch.outputs.branch }}|' ${{env.K8_DIR}}/auth-microservice-deployment.yaml
 
       - name: Deploy to GKE
         run: |
