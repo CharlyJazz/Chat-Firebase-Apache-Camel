@@ -73,12 +73,12 @@ jobs:
 
       - name: Deploy to GKE
         run: |
-          kubectl apply -f {{env.K8_DIR}}/auth-db-deployment.yaml
-          kubectl apply -f {{env.K8_DIR}}/auth-db-service.yaml
-          kubectl apply -f {{env.K8_DIR}}/auth-db-volume-persistentvolumeclaim.yaml
-          kubectl apply -f {{env.K8_DIR}}/auth-microservice-config.yaml
-          kubectl apply -f {{env.K8_DIR}}/auth-microservice-deployment.yaml
-          kubectl apply -f {{env.K8_DIR}}/auth-microservice-service.yaml
+          kubectl apply -f ${{env.K8_DIR}}/auth-db-deployment.yaml
+          kubectl apply -f ${{env.K8_DIR}}/auth-db-service.yaml
+          kubectl apply -f ${{env.K8_DIR}}/auth-db-volume-persistentvolumeclaim.yaml
+          kubectl apply -f ${{env.K8_DIR}}/auth-microservice-config.yaml
+          kubectl apply -f ${{env.K8_DIR}}/auth-microservice-deployment.yaml
+          kubectl apply -f ${{env.K8_DIR}}/auth-microservice-service.yaml
 
 
       
