@@ -35,4 +35,4 @@ Let imagine `ec4942c811fe` is the container ID (`docker ps` will show you what i
 
 ## Testing Deploy to K8:
 
-- 1, 2
+- 1, 2, 3
