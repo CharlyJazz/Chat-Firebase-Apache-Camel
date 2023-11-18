@@ -1,4 +1,4 @@
-name: Example Workflow
+name: Deploy Auth Microservices changes
 
 on:
   push:
@@ -41,11 +41,6 @@ jobs:
         with:
           cluster_name: ${{ env.GKE_CLUSTER }}
           location: ${{ env.GKE_ZONE }}
-
-      # - name: 'Get GKE credentials'
-      #   run: |
-      #     gcloud container clusters get-credentials ${{ env.GKE_CLUSTER }} --zone ${{ env.GKE_ZONE }}
-      #     export USE_GKE_GCLOUD_AUTH_PLUGIN=True
 
       # - name: Log in to Docker Hub
       #   uses: docker/login-action@v3

@@ -27,8 +27,8 @@ spec:
           volumeMounts:
             - mountPath: /var/lib/cassandra
               name: chat-db-volume
+              subPath: data
           resources: {}
-      restartPolicy: Always
       volumes:
         - name: chat-db-volume
           persistentVolumeClaim:
