@@ -8,14 +8,29 @@ on:
       - 'auth-microservice/**'
 
 jobs:
-  build:
+  push_to_registry:
+    name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout Repository
+      - name: Check out the repo
         uses: actions/checkout@v4
-
-      - name: Run Script
-        run: |
-          echo "Changes detected in auth-microservice/**"
-          # Add your build, test, or deployment scripts here
+      
+      - name: Log in to Docker Hub
+        uses: docker/login-action@3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: charlyjazz/auth-microservice
+      
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: auth-microservice/
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
