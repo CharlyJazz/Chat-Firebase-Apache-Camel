@@ -71,9 +71,9 @@ jobs:
           kubectl apply -f ${{env.K8_DIR}}/chat-db-volume-persistentvolumeclaim.yaml
           kubectl apply -f ${{env.K8_DIR}}/cassandra-deployment.yaml
           kubectl apply -f ${{env.K8_DIR}}/cassandra-service.yaml  
-          kubectl apply -f ${{env.K8_DIR}}/chat-microservices-config.yaml
-          kubectl apply -f ${{env.K8_DIR}}/chat-microservices-deployment.yaml
-          kubectl apply -f ${{env.K8_DIR}}/chat-microservices-service.yaml
+          kubectl apply -f ${{env.K8_DIR}}/chat-microservice-config.yaml
+          kubectl apply -f ${{env.K8_DIR}}/chat-microservice-deployment.yaml
+          kubectl apply -f ${{env.K8_DIR}}/chat-microservice-service.yaml
 
 
       
