@@ -34,4 +34,15 @@
    --project=chat1-405416
 - gcloud auth application-default login --project chat1-405416 - https://fabianlee.org/2023/06/11/terraform-fixing-error-querying-cloud-storage-failed-storage-bucket-doesnt-exist/
 
-### Create Github Action Pipeline for auth-microservice (TODO)
+### Create Github Action Pipeline for auth-microservice
+
+- gcloud iam service-accounts create github-action
+  gcloud projects add-iam-policy-binding chat1-405416 \
+   --member=serviceAccount:github-action@chat1-405416.iam.gserviceaccount.com \
+   --role=roles/container.admin
+  gcloud projects add-iam-policy-binding chat1-405416 \
+   --member=serviceAccount:github-action@chat1-405416.iam.gserviceaccount.com \
+   --role=roles/storage.admin
+  gcloud projects add-iam-policy-binding chat1-405416 \
+   --member=serviceAccount:github-action@chat1-405416.iam.gserviceaccount.com \
+   --role=roles/container.clusterViewer

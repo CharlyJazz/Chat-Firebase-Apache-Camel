@@ -37,3 +37,7 @@ aggregated-messages-consumer/service_account_key.json
 frontend-web/.env
 
 .env
+
+gha-creds-*.json
+
+service_account_github_action.json
