@@ -34,10 +34,18 @@ jobs:
       - name: 'Use gcloud CLI'
         run: 'gcloud info'
 
-      - name: 'Get GKE credentials'
-        run: |
-          gcloud container clusters get-credentials ${{ env.GKE_CLUSTER }} --zone ${{ env.GKE_ZONE }}
-          export USE_GKE_GCLOUD_AUTH_PLUGIN=True
+      - name: setup-gke-gcloud-auth-plugin
+        uses: simenandre/setup-gke-gcloud-auth-plugin@v1.1.2
+            
+      - uses: google-github-actions/get-gke-credentials@v1
+        with:
+          cluster_name: ${{ env.GKE_CLUSTER }}
+          location: ${{ env.GKE_ZONE }}
+
+      # - name: 'Get GKE credentials'
+      #   run: |
+      #     gcloud container clusters get-credentials ${{ env.GKE_CLUSTER }} --zone ${{ env.GKE_ZONE }}
+      #     export USE_GKE_GCLOUD_AUTH_PLUGIN=True
 
       # - name: Log in to Docker Hub
       #   uses: docker/login-action@v3
