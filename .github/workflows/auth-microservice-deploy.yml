@@ -77,7 +77,6 @@ jobs:
           kubectl apply -f ${{env.K8_DIR}}/auth-db-service.yaml
           kubectl apply -f ${{env.K8_DIR}}/auth-db-volume-persistentvolumeclaim.yaml
           kubectl apply -f ${{env.K8_DIR}}/auth-microservice-config.yaml
-          cat ${{env.K8_DIR}}/auth-microservice-deployment.yaml
           kubectl apply -f ${{env.K8_DIR}}/auth-microservice-deployment.yaml
           kubectl apply -f ${{env.K8_DIR}}/auth-microservice-service.yaml
 

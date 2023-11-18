@@ -33,8 +33,9 @@ spec:
                 protocol: TCP
             resources: {}
             volumeMounts:
-              - mountPath: /var/lib/postgresql/data
-                name: auth-db-volume
+              - name: auth-db-volume
+                mountPath: /var/lib/postgresql/data
+                subPath: postgres
       volumes:
         - name: auth-db-volume
           persistentVolumeClaim:
