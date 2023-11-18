@@ -19,13 +19,6 @@ spec:
             envFrom:
               - configMapRef:
                   name: auth-microservice-config
-            livenessProbe:
-              exec:
-                command:
-                  - pg_isready
-              failureThreshold: 5
-              periodSeconds: 5
-              timeoutSeconds: 10
             name: auth-db
             ports:
               - containerPort: 5432
