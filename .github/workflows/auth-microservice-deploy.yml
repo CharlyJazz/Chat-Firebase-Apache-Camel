@@ -37,6 +37,9 @@ jobs:
       - name: 'Get GKE credentials'
         run: |
           gcloud container clusters get-credentials ${{ env.GKE_CLUSTER }} --zone ${{ env.GKE_ZONE }}
+          export USE_GKE_GCLOUD_AUTH_PLUGIN=True
+          gcloud components install gke-gcloud-auth-plugin
+          kubectl plugin list
 
       # - name: Log in to Docker Hub
       #   uses: docker/login-action@v3
