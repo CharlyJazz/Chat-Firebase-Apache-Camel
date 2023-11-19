@@ -64,7 +64,7 @@ jobs:
 
       - name: Update Deployment Image
         run: |
-          sed -i 's|${{IMAGE}}:latest|${{IMAGE}}:${{github.ref_name}}|' ${{env.K8_DIR}}/auth-microservice-deployment.yaml
+          sed -i 's|${{env.IMAGE}}:latest|${{env.IMAGE}}:${{github.ref_name}}|' ${{env.K8_DIR}}/auth-microservice-deployment.yaml
 
       - name: Deploy to GKE
         run: |
