@@ -68,7 +68,13 @@ jobs:
 
       - name: Deploy to GKE
         run: |
-          kubectl apply -f ${{env.K8_DIR}}/consumer-deployment.yaml
+          echo "Apply the deployment and capture the output"
+          DEPLOYMENT_OUTPUT=$(kubectl apply -f ${{env.K8_DIR}}/consumer-deployment.yaml)
+          echo "Check if the output contains 'unchanged'"
+          if echo "$DEPLOYMENT_OUTPUT" | grep -q 'unchanged'; then
+            echo "Deployment unchanged. Restarting to pick up possible new Docker image..."
+            kubectl rollout restart aggregated-messages-consumer
+          fi
 
 
 
