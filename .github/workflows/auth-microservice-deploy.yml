@@ -72,6 +72,15 @@ jobs:
           kubectl apply -f ${{env.K8_DIR}}/auth-db-service.yaml
           kubectl apply -f ${{env.K8_DIR}}/auth-db-volume-persistentvolumeclaim.yaml
           kubectl apply -f ${{env.K8_DIR}}/auth-microservice-config.yaml
+          
+          echo "Apply the deployment and capture the output"
+          DEPLOYMENT_OUTPUT=$(kubectl apply -f ${{env.K8_DIR}}/auth-microservice-deployment.yaml)
+          echo "Check if the output contains 'unchanged'"
+          if echo "$DEPLOYMENT_OUTPUT" | grep -q 'unchanged'; then
+            echo "Deployment unchanged. Restarting to pick up possible new Docker image..."
+            kubectl rollout restart deployment/auth-microservice
+          fi
+
           kubectl apply -f ${{env.K8_DIR}}/auth-microservice-deployment.yaml
           kubectl apply -f ${{env.K8_DIR}}/auth-microservice-service.yaml
 
