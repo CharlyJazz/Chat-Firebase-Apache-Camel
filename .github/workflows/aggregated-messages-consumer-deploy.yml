@@ -1,0 +1,75 @@
+name: Deploy Aggregated Messages Consumer changes
+
+on:
+  push:
+    branches: 
+      - main
+    paths:
+      - 'aggregated-messages-consumer/**'
+
+env:
+  GKE_CLUSTER: chat1-405416-gke
+  GKE_ZONE: us-central1
+  IMAGE: charlyjazz/amc
+  K8_DIR: aggregated-messages-consumer/k8s
+
+jobs:
+  setup-build-publish-deploy:
+    name: Setup, Build, Publish, and Deploy
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          credentials_json: '${{ secrets.GOOGLE_CREDENTIALS }}'
+
+      - name: 'Use gcloud CLI'
+        run: 'gcloud info'
+
+      - name: setup-gke-gcloud-auth-plugin
+        uses: simenandre/setup-gke-gcloud-auth-plugin@v1.1.2
+            
+      - uses: google-github-actions/get-gke-credentials@v1
+        with:
+          cluster_name: ${{ env.GKE_CLUSTER }}
+          location: ${{ env.GKE_ZONE }}
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.IMAGE }}
+      
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: aggregated-messages-consumer/
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Update Deployment Image
+        run: |
+          sed -i 's|${{ env.IMAGE }}:latest|${{ env.IMAGE }}:${{github.ref_name}}|' ${{env.K8_DIR}}/consumer-deployment.yaml
+
+      - name: Deploy to GKE
+        run: |
+          kubectl apply -f ${{env.K8_DIR}}/consumer-deployment.yaml
+
+
+
+      

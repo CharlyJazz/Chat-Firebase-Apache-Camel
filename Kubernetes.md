@@ -36,7 +36,7 @@
 
 - docker build -t charlyjazz/amc:latest .
 - docker push charlyjazz/amc:latest
-- kubectl create secret generic firebase-secret --from-file=service_account_key.json=./service_account_key.json
+- kubectl create secret generic firebase-secret -from-file=service_account_key.json=./service_account_key.json
 
 ### Apache Camel Service Bus
 
