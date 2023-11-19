@@ -8,12 +8,4 @@ resource "kubernetes_secret" "firebase_secret" {
   }
 }
 
-resource "kubernetes_secret" "frontend_secrets" {
-  metadata {
-    name = "frontend-secrets"
-  }
-
-  data = {
-    "file.txt" = file("${path.module}/env.prod")
-  }
-}
+# I don't know how to do kubectl create secret generic frontend-secrets --from-env-file=.env

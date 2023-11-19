@@ -48,4 +48,4 @@
    --role=roles/container.clusterViewer
 
 - I used this action: https://github.com/simenandre/setup-gke-gcloud-auth-plugin/blob/main/action.yml
-- XD
+- kubectl create secret generic frontend-secrets --from-env-file=terraform/env.prod
