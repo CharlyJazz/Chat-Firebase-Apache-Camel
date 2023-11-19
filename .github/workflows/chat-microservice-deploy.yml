@@ -64,7 +64,7 @@ jobs:
 
       - name: Update Deployment Image
         run: |
-          sed -i 's|charlyjazz/chat-microservice:latest|charlyjazz/chat-microservice:${{github.ref_name}}|' ${{env.K8_DIR}}/chat-microservice-deployment.yaml
+          sed -i 's|${{env.IMAGE}}:latest|${{env.IMAGE}}:${{github.ref_name}}|' ${{env.K8_DIR}}/chat-microservice-deployment.yaml
 
       - name: Deploy to GKE
         run: |
@@ -72,7 +72,15 @@ jobs:
           kubectl apply -f ${{env.K8_DIR}}/cassandra-deployment.yaml
           kubectl apply -f ${{env.K8_DIR}}/cassandra-service.yaml  
           kubectl apply -f ${{env.K8_DIR}}/chat-microservice-config.yaml
-          kubectl apply -f ${{env.K8_DIR}}/chat-microservice-deployment.yaml
+
+          echo "Apply the deployment and capture the output"
+          DEPLOYMENT_OUTPUT=$(kubectl apply -f ${{env.K8_DIR}}/chat-microservice-deployment.yaml)
+          echo "Check if the output contains 'unchanged'"
+          if echo "$DEPLOYMENT_OUTPUT" | grep -q 'unchanged'; then
+            echo "Deployment unchanged. Restarting to pick up possible new Docker image..."
+            kubectl rollout restart deployment/chat-microservice
+          fi
+
           kubectl apply -f ${{env.K8_DIR}}/chat-microservice-service.yaml
 
 
