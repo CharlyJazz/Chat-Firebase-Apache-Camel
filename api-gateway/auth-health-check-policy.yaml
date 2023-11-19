@@ -1,0 +1,15 @@
+apiVersion: networking.gke.io/v1
+kind: HealthCheckPolicy
+metadata:
+  name: auth-healthcheck
+spec:
+  default:
+    config:
+      type: HTTP
+      httpHealthCheck:
+        port: 8000
+        requestPath: /auth/api/health
+  targetRef:
+    group: ""
+    kind: Service
+    name: auth-microservice-service
