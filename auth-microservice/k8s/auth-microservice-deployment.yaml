@@ -17,6 +17,7 @@ spec:
       containers:
           - name: auth-microservice
             image: charlyjazz/auth-microservice:latest
+            imagePullPolicy: Always
             ports:
               - containerPort: 8000
                 hostPort: 8000

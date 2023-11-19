@@ -17,6 +17,7 @@ spec:
       containers:
         - name: chat-microservice
           image: charlyjazz/chat-microservice:latest
+          imagePullPolicy: Always
           ports:
           - containerPort: 9000
             hostPort: 9000
