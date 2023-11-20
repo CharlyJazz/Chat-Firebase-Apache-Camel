@@ -18,6 +18,16 @@ spec:
           - name: auth-microservice
             image: charlyjazz/auth-microservice:latest
             imagePullPolicy: Always
+            livenessProbe:
+              httpGet:
+                path: /api/health
+                scheme: HTTP
+                port: 8000
+            readinessProbe:
+              httpGet:
+                path: /api/health
+                scheme: HTTP
+                port: 8000
             ports:
               - containerPort: 8000
                 hostPort: 8000

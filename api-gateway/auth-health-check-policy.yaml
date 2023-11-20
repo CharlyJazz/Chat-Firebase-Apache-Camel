@@ -11,9 +11,8 @@ spec:
     config:
       type: HTTP
       httpHealthCheck:
-        portSpecification: USE_FIXED_PORT
         port: 8000  
-        requestPath: /auth/api/health
+        requestPath: /api/health
   targetRef:
     group: ""
     kind: Service
