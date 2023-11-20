@@ -4,10 +4,15 @@ metadata:
   name: auth-healthcheck
 spec:
   default:
+    checkIntervalSec: 10
+    timeoutSec: 10
+    logConfig:
+      enabled: true
     config:
       type: HTTP
       httpHealthCheck:
-        port: 8000
+        portSpecification: USE_FIXED_PORT
+        port: 8000  
         requestPath: /auth/api/health
   targetRef:
     group: ""

@@ -5,7 +5,7 @@ metadata:
 spec:
   gatewayClassName: gke-l7-global-external-managed 
   listeners:
-  - name: http
+  - name: http-listener
     protocol: HTTP
     port: 80
     allowedRoutes:
