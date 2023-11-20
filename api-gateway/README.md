@@ -62,3 +62,12 @@ kubectl describe gateways global-external-managed-chat-api-gateway
 kubectl describe healthcheckpolicy auth-healthcheck
 
 kubectl describe httproute auth-http-route
+
+failed_to_pick_backend - The load balancer failed to pick a healthy backend to handle the request.
+
+Debug tips:
+
+List the pods the load balancer pointing to.
+Make sure that probes (ie. readiness, liveness) are configured.
+Describe the pods ( kubectl describe pods <pod_name> -n <namespace>) to see why the health check is failing.
+Fix the health check problem. Once the pods are healthy, give the load balancer some time (sometimes it takes hours) to update the status.
