@@ -1,0 +1,19 @@
+apiVersion: networking.gke.io/v1
+kind: HealthCheckPolicy
+metadata:
+  name: chat-healthcheck
+spec:
+  default:
+    checkIntervalSec: 10
+    timeoutSec: 10
+    logConfig:
+      enabled: true
+    config:
+      type: HTTP
+      httpHealthCheck:
+        port: 9000  
+        requestPath: /api/health/
+  targetRef:
+    group: ""
+    kind: Service
+    name: chat-microservice-service

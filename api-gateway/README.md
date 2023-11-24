@@ -71,3 +71,5 @@ List the pods the load balancer pointing to.
 Make sure that probes (ie. readiness, liveness) are configured.
 Describe the pods ( kubectl describe pods <pod_name> -n <namespace>) to see why the health check is failing.
 Fix the health check problem. Once the pods are healthy, give the load balancer some time (sometimes it takes hours) to update the status.
+
+https://medium.com/google-developer-experts/getting-started-with-gke-gateway-controller-ee45c3bc8996

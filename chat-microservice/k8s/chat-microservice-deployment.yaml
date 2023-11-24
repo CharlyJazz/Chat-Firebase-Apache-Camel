@@ -18,6 +18,18 @@ spec:
         - name: chat-microservice
           image: charlyjazz/chat-microservice:latest
           imagePullPolicy: Always
+          livenessProbe:
+            initialDelaySeconds: 60
+            httpGet:
+              path: /api/health/
+              scheme: HTTP
+              port: 9000
+          readinessProbe:
+            initialDelaySeconds: 60
+            httpGet:
+              path: /api/health/
+              scheme: HTTP
+              port: 9000
           ports:
           - containerPort: 9000
             hostPort: 9000

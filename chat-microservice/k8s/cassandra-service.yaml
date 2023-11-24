@@ -6,7 +6,7 @@ metadata:
     name: chat-db-service
     app: database
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   ports:
       - port: 9042
         targetPort: 9042

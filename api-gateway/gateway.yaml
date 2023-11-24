@@ -1,9 +1,9 @@
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: Gateway
 metadata:
-  name: global-external-managed-chat-api-gateway
+  name: gke-l7-gxlb-api-gateway
 spec:
-  gatewayClassName: gke-l7-global-external-managed 
+  gatewayClassName: gke-l7-gxlb # Probar este
   listeners:
   - name: http-listener
     protocol: HTTP
