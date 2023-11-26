@@ -76,7 +76,7 @@ Java(TM) SE Runtime Environment (build 17.0.2+8-LTS-86)
 Java HotSpot(TM) 64-Bit Server VM (build 17.0.2+8-LTS-86, mixed mode, sharing)
 ```
 
-## Best current way to run the project:
+## Running the project using Docker Compose:
 
 ```bash
 docker-compose rm -svf && docker-compose up
