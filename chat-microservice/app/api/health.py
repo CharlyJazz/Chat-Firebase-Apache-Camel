@@ -10,6 +10,4 @@ router = APIRouter(prefix="/health", tags=["Health"])
 
 @router.get("/", status_code=200)
 async def health():
-    # TODO: VALIDATE CONFIGURATION SCHEMA REQUIRED VALUES
-    # TODO: CHECK CASSANDRA CONNECTION, KAFKA CONNECTION
     return Response(status_code=200)

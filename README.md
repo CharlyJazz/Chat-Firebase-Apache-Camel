@@ -226,7 +226,9 @@ NEXT_PUBLIC_APP_ID="..."
 - `terraform apply`
 - ./apply_k8s_configs.sh
 - Set in a .env `NEXT_PUBLIC_AUTH_MICROSERVICE` and `NEXT_PUBLIC_CHAT_MICROSERVICE` using the load balancing external IP
-- Run `kubectl create secret generic frontend-secrets --from-env-file=.env`
+- Go to firebase and create the project and a web app for this gcp project and fill the .env
+- Run ` kubectl create secret generic frontend-secrets --from-env-file=.env`
+- https://github.com/google-github-actions/auth/blob/main/docs/EXAMPLES.md to set GOOGLE_CREDENTIALS secret
 
 ### License
 
