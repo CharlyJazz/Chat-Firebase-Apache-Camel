@@ -21,7 +21,8 @@ async def shutdown_event():
 
 def create_application() -> FastAPI:
     application = FastAPI(title=settings.PROJECT_NAME)
-    origins = [ "http://localhost:3000", "http://34.69.26.50:3000" ]
+    # origins = [ "http://localhost:3000", "http://34.69.26.50:3000" ]
+    origins = [ "*" ]
     application.add_middleware(
         CORSMiddleware,
         allow_origins=origins,
