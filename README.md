@@ -212,6 +212,16 @@ NEXT_PUBLIC_MESSAGING_SENDER_ID="..."
 NEXT_PUBLIC_APP_ID="..."
 ```
 
+### Github Actions secrets required
+
+- DOCKERHUB_TOKEN
+- DOCKERHUB_USERNAME
+- GCP_PROJECT
+- GKE_SA_KEY
+- GKE_ZONE
+- GKE_CLUSTER
+- GOOGLE_CREDENTIALS
+
 ### Terraform
 
 - Create project

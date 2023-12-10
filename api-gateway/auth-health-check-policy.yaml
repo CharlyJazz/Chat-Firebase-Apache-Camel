@@ -12,7 +12,7 @@ spec:
       type: HTTP
       httpHealthCheck:
         port: 8000  
-        requestPath: /api/health/
+        requestPath: /auth/api/health/
   targetRef:
     group: ""
     kind: Service

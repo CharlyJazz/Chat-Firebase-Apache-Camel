@@ -21,13 +21,13 @@ spec:
             livenessProbe:
               initialDelaySeconds: 60
               httpGet:
-                path: /api/health/
+                path: /auth/api/health/
                 scheme: HTTP
                 port: 8000
             readinessProbe:
               initialDelaySeconds: 60
               httpGet:
-                path: /api/health/
+                path: /auth/api/health/
                 scheme: HTTP
                 port: 8000
             ports:
