@@ -39,4 +39,4 @@ Run a specific test case
 
 ## GKE Tests
 
-- 1, 2
+- 1, 2, 3
