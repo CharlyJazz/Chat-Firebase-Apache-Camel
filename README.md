@@ -212,7 +212,26 @@ NEXT_PUBLIC_MESSAGING_SENDER_ID="..."
 NEXT_PUBLIC_APP_ID="..."
 ```
 
----
+### Terraform
+
+- Create project
+- `gcloud auth application-default set-quota-project $PROJECT_NAME`
+- `gcloud config set project $PROJECT_NAME`
+- `terraform init`
+- Comment `gke_secrets.tf` and `kafka.tf`
+- `terraform apply`
+- `gcloud container clusters get-credentials chat2-405718-gke --region us-central1`
+- Set `gke_config_context` in `terraform.tfvars`
+- Uncomment `gke_secrets.tf` and `kafka.tf`
+- `terraform apply`
+- ./apply_k8s_configs.sh
+- Set in a .env `NEXT_PUBLIC_AUTH_MICROSERVICE` and `NEXT_PUBLIC_CHAT_MICROSERVICE` using the load balancing external IP
+- Go to firebase and create the project and a web app for this gcp project and fill the .env
+- Run ` kubectl create secret generic frontend-secrets --from-env-file=.env`
+- https://github.com/google-github-actions/auth/blob/main/docs/EXAMPLES.md to set GOOGLE_CREDENTIALS secret
+- GKE_SA_KEY gcloud iam service-accounts keys create key.json --iam-account=SA_EMAIL
+- export GKE_SA_KEY=$(cat key.json | base64)
+- use key.json in secret GKE_SA_KEY
 
 ### License
 

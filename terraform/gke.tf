@@ -29,9 +29,13 @@ resource "google_container_cluster" "primary" {
   remove_default_node_pool = true
   initial_node_count       = 1
 
-  network    = google_compute_network.vpc.name
-  subnetwork = google_compute_subnetwork.subnet.name
+  network    = google_compute_network.vpc.id
+  subnetwork = google_compute_subnetwork.subnet.id
 
+  ip_allocation_policy {
+    cluster_secondary_range_name  = "pod-ranges"
+    services_secondary_range_name = google_compute_subnetwork.subnet.secondary_ip_range.0.range_name
+  }
   gateway_api_config {
     channel = "CHANNEL_STANDARD"
   }

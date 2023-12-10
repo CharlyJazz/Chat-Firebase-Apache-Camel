@@ -45,3 +45,5 @@ service_account_github_action.json
 firestore_service_account.json
 
 env.prod
+
+firestore_service_acount_chat_messages.json

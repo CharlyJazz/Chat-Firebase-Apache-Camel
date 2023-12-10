@@ -6,8 +6,10 @@ resource "kubernetes_secret" "firebase_secret" {
   }
 
   data = {
-    "service_account_key.json" = file("${path.module}/firestore_service_account.json")
+    "service_account_key.json" = file("${path.module}/firestore_service_acount_chat_messages.json")
   }
+
+  depends_on = [local_file.firestore_service_acount_chat_messages]
 }
 
 # kubectl create secret generic frontend-secrets --from-env-file=.env

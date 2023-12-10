@@ -1,5 +1,10 @@
 resource "google_storage_bucket" "default" {
-  name          = "state-bucket-tfstate-chat1"
+  # Only comment the count attribute if
+  # you did not create the bucket manually in GCP
+  # In that case you should comment the backend config
+  # for the first apply
+  count         = 0
+  name          = "state-bucket-tfstate-chat3"
   force_destroy = false
   location      = "US"
   storage_class = "STANDARD"
