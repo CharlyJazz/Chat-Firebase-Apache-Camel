@@ -8,7 +8,7 @@ on:
       - 'chat-microservice/**'
 
 env:
-  GKE_CLUSTER: chat1-405416-gke
+  GKE_CLUSTER: chat3-407706-gke
   GKE_ZONE: us-central1
   IMAGE: charlyjazz/chat-microservice
   K8_DIR: chat-microservice/k8s

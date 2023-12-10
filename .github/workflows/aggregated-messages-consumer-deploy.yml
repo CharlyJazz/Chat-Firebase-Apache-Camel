@@ -8,7 +8,7 @@ on:
       - 'aggregated-messages-consumer/**'
 
 env:
-  GKE_CLUSTER: chat1-405416-gke
+  GKE_CLUSTER: chat3-407706-gke
   GKE_ZONE: us-central1
   IMAGE: charlyjazz/amc
   K8_DIR: aggregated-messages-consumer/k8s
