@@ -3,7 +3,7 @@ kind: Gateway
 metadata:
   name: gke-l7-gxlb-api-gateway
 spec:
-  gatewayClassName: gke-l7-gxlb # Probar este
+  gatewayClassName: gke-l7-gxlb
   listeners:
   - name: http-listener
     protocol: HTTP
