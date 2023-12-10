@@ -1,13 +1,17 @@
 # https://registry.terraform.io/providers/hashicorp/google/latest/docs/guides/using_gke_with_terraform
-# The Gateway API is supported on VPC-native clusters only.
+# https://cloud.google.com/kubernetes-engine/docs/how-to/deploying-gateways
 
-#VPC
+# Important:
+# The Gateway API is supported on VPC-native clusters only.
+# I needs a proxy-only subnet
+
+# VPC main for GLE Cluster
 resource "google_compute_network" "vpc" {
   name                    = "${var.project_id}-vpc"
   auto_create_subnetworks = false
 }
 
-# Subnet
+# Subnet config for VPC-native in GKE Cluster
 resource "google_compute_subnetwork" "subnet" {
   name          = "${var.project_id}-subnet"
   region        = var.region
@@ -24,7 +28,7 @@ resource "google_compute_subnetwork" "subnet" {
   }
 }
 
-# Proxy Subnet
+# Proxy-Only Subnet
 resource "google_compute_subnetwork" "managed_proxy_subnet" {
   role          = "ACTIVE"
   purpose       = "REGIONAL_MANAGED_PROXY"
