@@ -8,8 +8,6 @@ on:
       - 'frontend-web/**'
 
 env:
-  GKE_CLUSTER: chat3-407706-gke
-  GKE_ZONE: us-central1
   IMAGE: charlyjazz/frontend-web
   K8_DIR: frontend-web/k8s
 
@@ -39,8 +37,8 @@ jobs:
             
       - uses: google-github-actions/get-gke-credentials@v1
         with:
-          cluster_name: ${{ env.GKE_CLUSTER }}
-          location: ${{ env.GKE_ZONE }}
+          cluster_name: ${{ secrets.GKE_CLUSTER }}
+          location: ${{ secrets.GKE_ZONE }}
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
