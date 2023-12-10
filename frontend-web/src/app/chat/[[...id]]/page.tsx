@@ -124,7 +124,7 @@ const ChatPage = () => {
             style={{
               height: "80vh",
               overflow: "auto",
-              marginTop: "10px",
+              marginTop: "12px",
             }}
           >
             {!usersError &&
