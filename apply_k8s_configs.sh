@@ -6,10 +6,11 @@ set -e
 # List of directories containing Kubernetes configurations
 declare -a k8s_dirs=(
     # "kafka/k8s"
-    "chat-microservice/k8s"
-    "apache-camel-service-bus/k8s"
-    "auth-microservice/k8s"
-    "aggregated-messages-consumer/k8s"
+    api-gateway
+    # "chat-microservice/k8s"
+    # "apache-camel-service-bus/k8s"
+    # "auth-microservice/k8s"
+    # "aggregated-messages-consumer/k8s"
     # "frontend-web/k8s"
 )
 

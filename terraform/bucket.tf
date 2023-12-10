@@ -4,7 +4,7 @@ resource "google_storage_bucket" "default" {
   # In that case you should comment the backend config
   # for the first apply
   count         = 0
-  name          = "state-bucket-tfstate-chat1"
+  name          = "state-bucket-tfstate-chat3"
   force_destroy = false
   location      = "US"
   storage_class = "STANDARD"
