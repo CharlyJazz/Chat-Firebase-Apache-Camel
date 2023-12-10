@@ -128,35 +128,37 @@ const ChatPage = () => {
             }}
           >
             {!usersError &&
-              usersData.map((user) => {
-                const friendOrUnknow = chatsData?.some((chat) =>
-                  chat.users_id.includes(String(user.id))
-                );
-                return (
-                  <Menu.Item
-                    key={user.id}
-                    onClick={() => handleUserSelect(user)}
-                  >
-                    <Space>
-                      <Badge
-                        size="small"
-                        count={friendOrUnknow ? "" : "?"}
-                        color={friendOrUnknow ? "green" : "yellow"}
-                      >
-                        <Avatar
-                          size={"small"}
-                          style={{
-                            backgroundColor: stc(user.username + user.id),
-                          }}
+              usersData
+                .filter((n) => String(n.id) !== String(currentUserId))
+                .map((user) => {
+                  const friendOrUnknow = chatsData?.some((chat) =>
+                    chat.users_id.includes(String(user.id))
+                  );
+                  return (
+                    <Menu.Item
+                      key={user.id}
+                      onClick={() => handleUserSelect(user)}
+                    >
+                      <Space>
+                        <Badge
+                          size="small"
+                          count={friendOrUnknow ? "" : "?"}
+                          color={friendOrUnknow ? "green" : "yellow"}
                         >
-                          {user.username[0]}
-                        </Avatar>
-                      </Badge>
-                      <Typography.Text>{user.username}</Typography.Text>
-                    </Space>
-                  </Menu.Item>
-                );
-              })}
+                          <Avatar
+                            size={"small"}
+                            style={{
+                              backgroundColor: stc(user.username + user.id),
+                            }}
+                          >
+                            {user.username[0]}
+                          </Avatar>
+                        </Badge>
+                        <Typography.Text>{user.username}</Typography.Text>
+                      </Space>
+                    </Menu.Item>
+                  );
+                })}
             {usersError ? (
               <Space>
                 {/* Display error message */}
