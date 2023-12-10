@@ -229,6 +229,9 @@ NEXT_PUBLIC_APP_ID="..."
 - Go to firebase and create the project and a web app for this gcp project and fill the .env
 - Run ` kubectl create secret generic frontend-secrets --from-env-file=.env`
 - https://github.com/google-github-actions/auth/blob/main/docs/EXAMPLES.md to set GOOGLE_CREDENTIALS secret
+- GKE_SA_KEY gcloud iam service-accounts keys create key.json --iam-account=SA_EMAIL
+- export GKE_SA_KEY=$(cat key.json | base64)
+- use key.json in secret GKE_SA_KEY
 
 ### License
 
